@@ -41,7 +41,7 @@ CascadeView.prototype = {
         if (this.sub) {
             for (var r = 0; r < this.rows; ++r)
                 for (var c = 0; c < this.columns; ++c) {
-                    //this.sub.data = this.data[r][c];
+                    this.sub.data = this.data[r][c];
                     var pos = this.getPos(r, c);
                     this.sub.cascadeDraw(imgData, x0 + pos.x, y0 + pos.y);
                 }

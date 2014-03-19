@@ -5,7 +5,7 @@ views = {
             for (var x = 0; x < this.width; ++x)
                 for (var y = 0; y < this.height; ++ y) {
                     var p = 4 * ((y + y0) * imgData.width + x + x0);
-                    imgData.data[p] = 0;
+                    imgData.data[p] = 255 - this.data * 40;
                     imgData.data[p + 1] = 0;
                     imgData.data[p + 2] = 0;
                     imgData.data[p + 3] = 255;
@@ -19,11 +19,11 @@ views = {
         this.canvas.hMargin = this.canvas.vMargin = 0.2;
     },
 
-    config: function() {
-        this.depot.rows = 25;
-        this.depot.columns = 30;
-        this.canvas.rows = 5;
-        this.canvas.columns = 5;
-        this.canvas.setSize(canvas.width, canvas.height);
+    config: function(args) {
+        this.depot.rows = args.depotRows;
+        this.depot.columns = args.depotColumns;
+        this.canvas.rows = args.rows;
+        this.canvas.columns = args.columns;
+        this.canvas.setSize(args.width, args.height);
     }
 }
