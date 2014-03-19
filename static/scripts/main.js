@@ -13,5 +13,5 @@ views.init_units();
 views.config();
 
 imgData = ctx.createImageData(canvas.width, canvas.height);
-g.cascadeDraw(imgData, 0, 0);
+views.canvas.cascadeDraw(imgData, 0, 0);
 ctx.putImageData(imgData, 0, 0);

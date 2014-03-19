@@ -13,9 +13,15 @@ CascadeView.prototype = {
 
     setLayout: function() {
         this.hSpace = parseInt(this.width * this.hMargin / (this.columns + 1));
-        this.subWidth = parseInt(this.width * (1 - this.hMargin) / this.columns);
+        if (this.hSpace < 1) {
+            this.hSPace = 1;
+        }
         this.vSpace = parseInt(this.height * this.vMargin / (this.rows + 1));
-        this.subHeight = parseInt(this.height * (1 - this.vMargin) / this.rows);
+        if (this.vSpace < 1) {
+            this.vSpace = 1;
+        }
+        this.subWidth = parseInt((this.width - this.hSpace * (1 + this.columns)) / this.columns);
+        this.subHeight = parseInt((this.height - this.vSpace * (1 + this.rows)) / this.rows);
 
         this.sub.setSize(this.subWidth, this.subHeight);
     },
