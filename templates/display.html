@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+    <head>
+        <title>
+            {{ title }}
+        </title>
+
+        <style>
+            #wrapper {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            #canvas {
+                margin: 0px;
+                background: #ffffff;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id='wrapper'>
+            <canvas id='canvas'>
+                Canvas not supported
+            </canvas>
+
+            {{ js }}
+        </div>
+    </body>
+</html>
