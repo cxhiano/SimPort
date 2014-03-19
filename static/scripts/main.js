@@ -37,12 +37,7 @@ args = {
 };
 
 data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], getValue);
-console.log(data);
 
-views.init_units();
-views.config(args);
-views.canvas.data = data;
-
-imgData = ctx.createImageData(canvas.width, canvas.height);
-views.canvas.cascadeDraw(imgData, 0, 0);
-ctx.putImageData(imgData, 0, 0);
+view.init_units();
+view.config(args);
+view.display(data);
