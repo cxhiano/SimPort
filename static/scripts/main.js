@@ -14,23 +14,40 @@ function initContext() {
 function registerEvents() {
     $('#set').click(function() {
         var args = {};
-        $('#config > input').each(function() {
+        $('#config input').each(function() {
             args[this.id] = parseInt(this.value);
         });
 
-        console.log(args);
         view.config(args);
-        console.log(view);
         var data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], args.maxStacks);
         view.display(data);
     });
+}
 
-    toggleWindows = function() {
-        $('#config').slideToggle();
-        $('#canvas').slideToggle();
+function initNavigator() {
+    layout = ['#config', '#wrapper'];
+    current_wnd = 0;
+    for (var i = 1; i < layout.length; ++i) {
+        $(layout[i]).hide();
     }
 
-    $('#view').click(toggleWindows);
+    $(document).keydown(function(e) {
+        if (e.which == 37) {        //left arrow pressed
+            if (current_wnd > 0) {
+                $(layout[current_wnd]).hide();
+                --current_wnd;
+                $(layout[current_wnd]).slideToggle();
+            }
+        }
+
+        if (e.which == 39) {        //right arrow pressed
+            if (current_wnd + 1 < layout.length) {
+                $(layout[current_wnd]).hide();
+                ++current_wnd;
+                $(layout[current_wnd]).slideToggle();
+            }
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -38,6 +55,5 @@ $(document).ready(function() {
     view.init_units();
     view.canvas.setSize(canvas.width, canvas.height);
     registerEvents();
-    $('#canvas').hide();
-    console.log(view);
+    initNavigator();
 });

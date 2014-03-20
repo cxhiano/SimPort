@@ -35,7 +35,14 @@ def _styles():
     return _gen_html(html, flat_ui)
 
 def _inputs():
-    temp = '<input id="{0}" type="text" placeholder="{0}" class="form-control" />'
+    temp = '''
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">{0}</span>
+                    <input id="{0}" type="text" class="form-control" placeholder="{0}" value=5 />
+                </div>
+            </div>
+            '''
     return _gen_html(temp, ['rows', 'columns', 'depotRows', 'depotColumns', 'maxStacks'])
 
 @app.route('/')
