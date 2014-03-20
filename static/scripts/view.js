@@ -5,14 +5,16 @@ view = {
         ctx.putImageData(this.imgData, 0, 0);
     },
 
-    init_units: function() { this.imgData = ctx.createImageData(canvas.width, canvas.height); this.box = new CascadeView(null);
+    init_units: function() {
+        this.imgData = ctx.createImageData(canvas.width, canvas.height); 
+        this.box = new CascadeView(null);
         this.box.draw = function(imgData, x0, y0) {
             view.drawRect(
                     imgData,
 
                     {
                         x0: x0,
-                        y0: y0,
+                         y0: y0,
                         width: this.width,
                         height: this.height,
                     },
@@ -38,7 +40,7 @@ view = {
         this.depot.columns = args.depotColumns;
         this.canvas.rows = args.rows;
         this.canvas.columns = args.columns;
-        this.canvas.setSize(args.width, args.height);
+        this.canvas.updateLayout();
     },
 
     getPos: function(row, column, depotRow, depotColumn) {

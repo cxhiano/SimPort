@@ -1,4 +1,4 @@
-function init_context() {
+function initContext() {
     fullScreen = function(obj) {
         obj.width = window.innerWidth;
         obj.height = window.innerHeight;
@@ -6,46 +6,38 @@ function init_context() {
 
     wrapper = document.getElementById('canvas');
     canvas = document.getElementById('canvas');
-    config = document.getElementById('config');
 
     ctx = canvas.getContext('2d');
     fullScreen(canvas);
-    fullScreen(wrapper);
-    $('#canvas').hide();
 }
 
-function getValue() {
-    return parseInt(Math.random() * (args.maxStack + 1));
-}
+function registerEvents() {
+    $('#set').click(function() {
+        var args = {};
+        $('#config > input').each(function() {
+            args[this.id] = parseInt(this.value);
+        });
 
-function generateData(dim, getValue) {
-    if (dim.length == 0) {
-        return getValue();
+        console.log(args);
+        view.config(args);
+        console.log(view);
+        var data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], args.maxStacks);
+        view.display(data);
+    });
+
+    toggleWindows = function() {
+        $('#config').slideToggle();
+        $('#canvas').slideToggle();
     }
 
-    var ret = [];
-    for (var i = 0; i < dim[0]; ++i) {
-        ret.push(generateData(dim.slice(1), getValue));
-    }
-    return ret;
+    $('#view').click(toggleWindows);
 }
 
 $(document).ready(function() {
-    init_context();
-
-    args = {
-        depotRows: 5,
-        depotColumns: 5,
-        rows: 5,
-        columns: 5,
-        width: canvas.width,
-        height: canvas.height,
-        maxStack: 6,
-    };
-
-    data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], getValue);
-
+    initContext();
     view.init_units();
-    view.config(args);
-    view.display(data);
+    view.canvas.setSize(canvas.width, canvas.height);
+    registerEvents();
+    $('#canvas').hide();
+    console.log(view);
 });

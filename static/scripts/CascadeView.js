@@ -6,12 +6,13 @@ CascadeView.prototype = {
     setSize: function(width, height) {
         this.width = width;
         this.height = height;
+
         if (this.sub) {
-            this.setLayout();
+            this.updateLayout();
         }
     },
 
-    setLayout: function() {
+    updateLayout: function() {
         this.hSpace = parseInt(this.width * this.hMargin / (this.columns + 1));
         if (this.hSpace < 1) {
             this.hSPace = 1;

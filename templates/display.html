@@ -11,7 +11,7 @@
             }
         </style>
 
-        {{ style }}
+        {{ styles }}
     </head>
 
     <body>
@@ -21,11 +21,19 @@
             </canvas>
 
             <div id='config'>
-                <input type="text" placeholder="???" class="form-control input-lg" />
+                {{ inputs }}
+
+                <button id="set" class="btn btn-embossed btn-primary">
+                    Set
+                </button>
+
+                <button id="view" class="btn btn-embossed btn-primary">
+                    view
+                </button>
             </div>
 
         </div>
 
-        {{ js }}
+        {{ scripts }}
     </body>
 </html>
