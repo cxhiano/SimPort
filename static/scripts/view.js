@@ -7,7 +7,8 @@ view = {
 
     init_units: function() { this.imgData = ctx.createImageData(canvas.width, canvas.height); this.box = new CascadeView(null);
         this.box.draw = function(imgData, x0, y0) {
-            view.drawRect(imgData,
+            view.drawRect(
+                    imgData,
 
                     {
                         x0: x0,
@@ -17,9 +18,9 @@ view = {
                     },
 
                     {
-                        R: 255 - this.data * 40,
-                        G: 0,
-                        B: 0,
+                        R: 255,
+                        G: 255 - this.data * 40,
+                        B: 255 - this.data * 40,
                         A: 255,
                     }
                 );
@@ -29,7 +30,7 @@ view = {
         this.depot.hMargin = this.depot.vMargin = 0.2;
 
         this.canvas = new CascadeView(this.depot);
-        this.canvas.hMargin = this.canvas.vMargin = 0.2;
+        this.canvas.hMargin = this.canvas.vMargin = 0.3;
     },
 
     config: function(args) {

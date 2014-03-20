@@ -1,11 +1,17 @@
 function init_context() {
+    fullScreen = function(obj) {
+        obj.width = window.innerWidth;
+        obj.height = window.innerHeight;
+    }
+
+    wrapper = document.getElementById('canvas');
     canvas = document.getElementById('canvas');
-    wrapper = document.getElementById('wrapper');
+    config = document.getElementById('config');
+
     ctx = canvas.getContext('2d');
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    wrapper.height = window.innerHeight;
-    wrapper.width = window.innerWidth;
+    fullScreen(canvas);
+    fullScreen(wrapper);
+    $('#canvas').hide();
 }
 
 function getValue() {
@@ -24,20 +30,22 @@ function generateData(dim, getValue) {
     return ret;
 }
 
-init_context();
+$(document).ready(function() {
+    init_context();
 
-args = {
-    depotRows: 5,
-    depotColumns: 5,
-    rows: 5,
-    columns: 5,
-    width: canvas.width,
-    height: canvas.height,
-    maxStack: 6,
-};
+    args = {
+        depotRows: 5,
+        depotColumns: 5,
+        rows: 5,
+        columns: 5,
+        width: canvas.width,
+        height: canvas.height,
+        maxStack: 6,
+    };
 
-data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], getValue);
+    data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], getValue);
 
-view.init_units();
-view.config(args);
-view.display(data);
+    view.init_units();
+    view.config(args);
+    view.display(data);
+});

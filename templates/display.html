@@ -5,17 +5,13 @@
         </title>
 
         <style>
-            #wrapper {
-                position: absolute;
-                top: 0;
-                left: 0;
-            }
-
             #canvas {
                 margin: 0px;
                 background: #ffffff;
             }
         </style>
+
+        {{ style }}
     </head>
 
     <body>
@@ -24,7 +20,12 @@
                 Canvas not supported
             </canvas>
 
-            {{ js }}
+            <div id='config'>
+                <input type="text" placeholder="???" class="form-control input-lg" />
+            </div>
+
         </div>
+
+        {{ js }}
     </body>
 </html>
