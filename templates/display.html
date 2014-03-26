@@ -13,7 +13,9 @@
             }
         </style>
 
-        {{ styles }}
+        {% for item in styles %}
+            <link href="static/Flat-UI/{{ item }}" rel="stylesheet" />
+        {% endfor %}
     </head>
 
     <body>
@@ -24,13 +26,26 @@
         </div>
 
         <div id='config'>
-            {{ inputs }}
+            {% for item in inputs %}
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">{{ item['id'] }}</span>
+                        <input id="{{ item['id'] }}" type="text" class="form-control" placeholder="{{ item['id'] }}" value={{ item['default'] }} />
+                    </div>
+                </div>
+            {% endfor %}
 
             <button id="set" class="btn btn-embossed btn-primary">
                 set
             </button>
         </div>
 
-        {{ scripts }}
+        {% for item in scripts_libs %}
+            <script src="static/Flat-UI/js/{{ item }}"> </script>
+        {% endfor %}
+
+        {% for item in custom_scripts %}
+            <script src="static/scripts/{{ item }}"> </script>
+        {% endfor %}
     </body>
 </html>
