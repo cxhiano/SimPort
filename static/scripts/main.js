@@ -56,4 +56,8 @@ $(document).ready(function() {
     view.canvas.setSize(canvas.width, canvas.height);
     registerEvents();
     initNavigator();
+    $('#set').click();
+    var d = new Depot(0, 0);
+    d.rLift.moveTo(4);
+    d.lLift.moveTo(2);
 });

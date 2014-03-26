@@ -14,17 +14,12 @@ view = {
 
                     {
                         x0: x0,
-                         y0: y0,
+                        y0: y0,
                         width: this.width,
                         height: this.height,
                     },
 
-                    {
-                        R: 255,
-                        G: 255 - this.data * 40,
-                        B: 255 - this.data * 40,
-                        A: 255,
-                    }
+                    view.getColor(this.data)
                 );
         }
 
@@ -40,15 +35,26 @@ view = {
         this.depot.columns = args.depotColumns;
         this.canvas.rows = args.rows;
         this.canvas.columns = args.columns;
+        this.maxStacks = args.maxStacks;
         this.canvas.updateLayout();
     },
 
-    getPos: function(row, column, depotRow, depotColumn) {
-        var pos = this.canvas.getPos(row, column),
-            d_pos = this.depot.getPos(depotRow, depotColumn);
+    getXY: function(pos) {
+        var xy = this.canvas.getXY(pos.rowDepot, pos.columnDepot),
+            d_xy = this.depot.getXY(pos.rowBox, pos.columnBox);
         return {
-            x: pos.x + d_pos.x,
-            y: pos.y + d_pos.y,
+            x: xy.x + d_xy.x,
+            y: xy.y + d_xy.y,
+        };
+    },
+
+    getColor: function(data) {
+        var tmp = 255 - data / this.maxStacks * 255;
+        return {
+            R: 255,
+            G: tmp,
+            B: tmp,
+            A: 255,
         };
     },
 

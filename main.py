@@ -24,7 +24,7 @@ def _scripts():
             'jquery.placeholder.js']
         )
 
-    js += _gen_url('scripts', ['CascadeView.js', 'view.js', 'data.js', 'main.js'])
+    js += _gen_url('scripts', ['CascadeView.js', 'view.js', 'lift.js', 'depot.js', 'data.js', 'main.js'])
 
     return _gen_html(html, js)
 
@@ -39,7 +39,7 @@ def _inputs():
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon">{0}</span>
-                    <input id="{0}" type="text" class="form-control" placeholder="{0}" value=5 />
+                    <input id="{0}" type="text" class="form-control" placeholder="{0}" value=6 />
                 </div>
             </div>
             '''

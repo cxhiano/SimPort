@@ -3,22 +3,16 @@ function Depot(row, column) {
     this.column = column;
     this.velocity = 2;
     this.lLift = new Lift(this, {
-        xy: this.getXY(0),
+        pos: 0,
         velocity: this.velocity,
+        id: 'llift' + this.row + '_' + this.column,
     });
     this.rLift = new Lift(this, {
-        xy: this.getXY(view.depot.columns - 1),
+        pos: 1,
         velocity: this.velocity,
+        id: 'rlift' + this.row + '_' + this.column,
     });
 }
 
 Depot.prototype = {
-    getXY: function(column) {
-        return view.getXY({
-            rowDepot: this.row,
-            columnDepot: this.column,
-            rowBox: 0,
-            columnBox: column
-        });
-    },
 };

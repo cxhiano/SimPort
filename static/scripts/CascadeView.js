@@ -27,7 +27,7 @@ CascadeView.prototype = {
         this.sub.setSize(this.subWidth, this.subHeight);
     },
 
-    getPos: function(r, c) {
+    getXY: function(r, c) {
         return {
             x: this.hSpace + c * (this.subWidth + this.hSpace),
             y: this.vSpace + r * (this.subHeight + this.vSpace),
@@ -43,8 +43,8 @@ CascadeView.prototype = {
             for (var r = 0; r < this.rows; ++r)
                 for (var c = 0; c < this.columns; ++c) {
                     this.sub.data = this.data[r][c];
-                    var pos = this.getPos(r, c);
-                    this.sub.cascadeDraw(imgData, x0 + pos.x, y0 + pos.y);
+                    var xy = this.getXY(r, c);
+                    this.sub.cascadeDraw(imgData, x0 + xy.x, y0 + xy.y);
                 }
         }
     }
