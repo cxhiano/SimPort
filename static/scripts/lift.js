@@ -2,21 +2,18 @@ function Lift(depot, args) {
     this.depot = depot;
     this.velocity = args.velocity;
     this.pos = args.pos;
-    var v = document.createElement('div');
-    v.id = args.id;
-    v.className = 'lift';
+    this.element = $('<div class="lift" />');
     var xy = this.getXY(this.pos);
-    v.style.left = xy.x + 'px';
-    v.style.top = xy.y + 'px';
-    document.getElementById('wrapper').appendChild(v);
-    this.element = $('#' + v.id);
+    this.element.css('left', xy.x + 'px');
+    this.element.css('top', xy.y + 'px');
     this.updateSize();
+    this.element.appendTo('#wrapper');
 }
 
 Lift.prototype = {
     updateSize: function() {
-        this.element.width(view.box.width + view.depot.hSpace + 'px');
-        this.element.height(view.depot.height + 'px');
+        this.element.css('width', view.box.width + view.depot.hSpace + 'px');
+        this.element.css('height', view.depot.height + 'px');
     },
 
     getXY: function(pos) {
@@ -34,8 +31,19 @@ Lift.prototype = {
     },
 
     moveTo: function(pos) {
-        var xy = this.getXY(pos);
-        this.element.animate({left: xy.x}, 5000, function() {
-        });
+        var from = this.getXY(this.pos).x,
+            to = this.getXY(pos).x,
+            t = 1000 * Math.abs(from - to) / this.velocity,
+            ths = this;
+
+        this.element.animate({
+                left: to
+            }, {
+                duration: t,
+                easing: 'linear',
+                complete: function() {
+                    ths.pos = pos;
+                }
+            });
     }
 };

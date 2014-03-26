@@ -58,6 +58,6 @@ $(document).ready(function() {
     initNavigator();
     $('#set').click();
     var d = new Depot(0, 0);
-    d.rLift.moveTo(4);
-    d.lLift.moveTo(2);
+    d.rLift.moveTo(3);
+    d.lLift.moveTo(1);
 });

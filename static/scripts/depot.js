@@ -1,7 +1,7 @@
 function Depot(row, column) {
     this.row = row;
     this.column = column;
-    this.velocity = 2;
+    this.velocity = 10;                 //px per sec
     this.lLift = new Lift(this, {
         pos: 0,
         velocity: this.velocity,
