@@ -1,16 +1,19 @@
-function randomValue(max) {
-    return parseInt(Math.random() * (max + 1));
-}
+function pushRequest(timeout, success) {
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        url: 'apis/test',
+        timeout: timeout,
 
-function generateData(dim, max) {
-    if (dim.length == 0) {
-        return randomValue(max);
-    }
+        success: success,
 
-    var ret = [];
-    for (var i = 0; i < dim[0]; ++i) {
-        ret.push(generateData(dim.slice(1), max));
-    }
-
-    return ret;
+        error: function(xmlReq, txtStatus, error) {
+            $("#instructions").append(new Date + '\n');
+            $("#instructions").append(txtStatus + '\n');
+            if (txtStatus === 'timeout') {
+                pushRequest(timeout, success);
+            }
+        },
+    });
 }

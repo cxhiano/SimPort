@@ -6,9 +6,23 @@ function initContext() {
 
     wrapper = document.getElementById('canvas');
     canvas = document.getElementById('canvas');
+    data = document.getElementById('data');
 
     ctx = canvas.getContext('2d');
     fullScreen(canvas);
+}
+
+function generateData(dim, max) {
+    if (dim.length == 0) {
+        return parseInt(Math.random() * (max + 1));
+    }
+
+    var ret = [];
+    for (var i = 0; i < dim[0]; ++i) {
+        ret.push(generateData(dim.slice(1), max));
+    }
+
+    return ret;
 }
 
 function registerEvents() {
@@ -25,7 +39,7 @@ function registerEvents() {
 }
 
 function initNavigator() {
-    layout = ['#config', '#wrapper'];
+    layout = ['#config', '#wrapper', '#data'];
     current_wnd = 0;
     for (var i = 1; i < layout.length; ++i) {
         $(layout[i]).hide();
@@ -57,7 +71,7 @@ $(document).ready(function() {
     registerEvents();
     initNavigator();
     $('#set').click();
-    var d = new Depot(0, 0);
-    d.rLift.moveTo(3);
-    d.lLift.moveTo(1);
+    pushRequest(2000, function(data) {
+        $('#instructions').append(data);
+    });
 });
