@@ -71,7 +71,5 @@ $(document).ready(function() {
     registerEvents();
     initNavigator();
     $('#set').click();
-    pushRequest(2000, function(data) {
-        $('#instructions').append(data);
-    });
+    updater.poll();
 });

@@ -1,19 +1,28 @@
-function pushRequest(timeout, success) {
-    $.ajax({
-        type: 'GET',
-        contentType: 'application/json',
-        dataType: 'json',
-        url: 'apis/test',
-        timeout: timeout,
+var updater = {
+    errorSleepTime: 500,
 
-        success: success,
+    url: 'instr/get',
 
-        error: function(xmlReq, txtStatus, error) {
-            $("#instructions").append(new Date + '\n');
-            $("#instructions").append(txtStatus + '\n');
-            if (txtStatus === 'timeout') {
-                pushRequest(timeout, success);
-            }
-        },
-    });
-}
+    poll: function() {
+        $.ajax({
+            url: updater.url,
+            type: 'GET',
+            dataType: 'text',
+            success: updater.onSuccess,
+            error: updater.onError,
+        });
+    },
+
+    onSuccess: function(data) {
+        console.log(data);
+        $('#instructions').append(data);
+        updater.errorSleepTime = 500;
+        window.setTimeout(updater.poll, 0);
+    },
+
+    onError: function(response) {
+        updater.errorSleepTime *= 2;
+        console.log(response);
+        window.setTimeout(updater.poll, updater.errorSleepTime);
+    },
+};
