@@ -52,6 +52,10 @@ def display():
 
     return flask.render_template('display.html', **args)
 
+@app.route('/apis/test')
+def test():
+    return 'adfdafsadfdsaf'
+
 if __name__ == '__main__':
     app.debug = True
     app.run()
