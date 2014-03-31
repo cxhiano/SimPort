@@ -14,10 +14,12 @@ var updater = {
     },
 
     onSuccess: function(data) {
-        console.log(data);
+        instr = eval('(' + data +')');
+        console.log(instr);
         $('#instructions').append(data);
         updater.errorSleepTime = 500;
         window.setTimeout(updater.poll, 0);
+        updater.instrHandler(instr);
     },
 
     onError: function(response) {
@@ -25,4 +27,17 @@ var updater = {
         console.log(response);
         window.setTimeout(updater.poll, updater.errorSleepTime);
     },
+
+    instrHandler: function(instr) {
+        for (var arg in instr) {
+            instr[arg] = instr[arg][0];
+        }
+        var d = Depot.prototype.getInstance(instr['dr'], instr['dc']);
+        console.log(instr);
+        if (instr['lift'] === 'l') {
+            d.lLift.moveTo(instr['pos']);
+        } else {
+            d.rLift.moveTo(instr['pos']);
+        }
+    }
 };

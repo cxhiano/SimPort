@@ -46,21 +46,21 @@ class InstructionUpdateHandler(RequestHandler):
     def on_new_instruction(self, instr):
         if self.request.connection.stream.closed():
             return
-        self.finish(dict(instr = instr))
+        self.finish(instr)
 
     def on_connection_close(self):
         dispatcher.deregister()
 
 class NewInstructionHandler(RequestHandler):
-    def get(self, instr):
-        dispatcher.new(instr)
+    def get(self):
+        dispatcher.new(self.request.arguments)
 
 def main():
     app = tornado.web.Application(
             [
                 (r'/', MainHandler),
                 (r'/instr/get', InstructionUpdateHandler),
-                (r'/instr/new/(.*)', NewInstructionHandler),
+                (r'/instr/new', NewInstructionHandler),
                 ],
             template_path = os.path.join(os.path.dirname(__file__), 'templates'),
             static_path = os.path.join(os.path.dirname(__file__), 'static'),

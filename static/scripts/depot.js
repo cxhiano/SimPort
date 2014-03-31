@@ -15,4 +15,17 @@ function Depot(row, column) {
 }
 
 Depot.prototype = {
+    getInstance: function(row, column) {
+        return Depot.prototype.depots[row][column];
+    },
+
+    init: function() {
+        Depot.prototype.depots = [];
+        for (var i = 0; i < view.canvas.rows; ++i) {
+            Depot.prototype.depots.push([])
+            for (var j = 0; j < view.canvas.columns; ++j) {
+                Depot.prototype.depots[i].push(new Depot(i, j));
+            }
+        }
+    },
 };
