@@ -72,5 +72,5 @@ $(document).ready(function() {
     initNavigator();
     $('#set').click();
     Depot.prototype.init();
-    updater.poll();
+    instrUpdater.poll();
 });

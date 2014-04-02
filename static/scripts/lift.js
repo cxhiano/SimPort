@@ -2,8 +2,9 @@ function Lift(depot, args) {
     this.depot = depot;
     this.velocity = args.velocity;
     this.column = args.column;
-    this.moving = false;
+    this.idle = true;
     this.hasBox = false;
+    this.jobQueue = [];
 
     this.element = $('<div class="lift" />');
     var xy = this.getXY(this.column);
@@ -33,6 +34,27 @@ Lift.prototype = {
         };
     },
 
+    addJob: function(job) {
+        console.log(job);
+        if (this.idle) {
+            this.idle = false;
+            job();
+        } else {
+            this.jobQueue.push(job);
+        }
+        console.log(this.jobQueue);
+    },
+
+    scheduleJobs: function() {
+        if (this.idle && this.jobQueue.length > 0) {
+            this.idle = false;
+            console.log(this.jobQueue);
+            var job = this.jobQueue[0];
+            this.jobQueue = this.jobQueue.slice(1);
+            job();
+        }
+    },
+
     moveTo: function(column) {
         var from = this.getXY(this.column).x,
             to = this.getXY(column).x,
@@ -47,7 +69,8 @@ Lift.prototype = {
                 easing: 'linear',
                 complete: function() {
                     ths.column = column;
-                    ths.moving = false;
+                    ths.idle = true;
+                    ths.scheduleJobs();
                 }
             });
     },
@@ -60,15 +83,17 @@ Lift.prototype = {
                 this.hasBox = true;
             }
         }
+        this.idle = true;
+        this.scheduleJobs();
     },
 
     putDown: function(row) {
-        if (!this.moving) {
-            var cnt = this.depot.getBoxCount(row, this.column);
-            if (this.hasBox) {
-                this.depot.updateBox(row, this.column, cnt + 1);
-                this.hasBox = false;
-            }
+        var cnt = this.depot.getBoxCount(row, this.column);
+        if (this.hasBox) {
+            this.depot.updateBox(row, this.column, cnt + 1);
+            this.hasBox = false;
         }
+        this.idle = true;
+        this.scheduleJobs();
     }
 };
