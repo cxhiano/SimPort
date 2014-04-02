@@ -12,6 +12,17 @@ CascadeView.prototype = {
         }
     },
 
+    setImgData: function(imgData) {
+        this.imgData = imgData;
+        if (this.sub) {
+            this.sub.setImgData(imgData);
+        }
+    },
+
+    render: function() {
+        ctx.putImageData(this.imgData, 0, 0, this.x0, this.y0, this.width, this.height);
+    },
+
     updateLayout: function() {
         this.hSpace = parseInt(this.width * this.hMargin / (this.columns + 1));
         if (this.hSpace < 1) {
@@ -34,9 +45,11 @@ CascadeView.prototype = {
         };
     },
 
-    cascadeDraw: function(imgData, x0, y0) {
+    cascadeDraw: function(x0, y0) {
+        this.x0 = x0;
+        this.y0 = y0;
         if (this.draw) {
-            this.draw(imgData, x0, y0);
+            this.draw(x0, y0);
         }
 
         if (this.sub) {
@@ -44,7 +57,7 @@ CascadeView.prototype = {
                 for (var c = 0; c < this.columns; ++c) {
                     this.sub.data = this.data[r][c];
                     var xy = this.getXY(r, c);
-                    this.sub.cascadeDraw(imgData, x0 + xy.x, y0 + xy.y);
+                    this.sub.cascadeDraw(x0 + xy.x, y0 + xy.y);
                 }
         }
     }

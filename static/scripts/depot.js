@@ -2,15 +2,14 @@ function Depot(row, column) {
     this.row = row;
     this.column = column;
     this.velocity = 10;                 //px per sec
+    this.data = view.canvas.data[row][column];
     this.lLift = new Lift(this, {
-        pos: 0,
+        column: 0,
         velocity: this.velocity,
-        id: 'llift' + this.row + '_' + this.column,
     });
     this.rLift = new Lift(this, {
-        pos: 1,
+        column: 1,
         velocity: this.velocity,
-        id: 'rlift' + this.row + '_' + this.column,
     });
 }
 
@@ -28,4 +27,22 @@ Depot.prototype = {
             }
         }
     },
+
+    updateBox: function(row, column, cnt) {
+        console.log(this);
+        var pos = view.getXY({
+            rowDepot: this.row,
+            columnDepot: this.column,
+            rowBox: row,
+            columnBox: column,
+            });
+        this.data[row][column] = cnt;
+        view.box.data = cnt;
+        view.box.cascadeDraw(pos.x, pos.y);
+        view.box.render();
+    },
+
+    getBoxCount: function(row, column) {
+        return this.data[row][column];
+    }
 };

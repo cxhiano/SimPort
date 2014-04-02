@@ -1,27 +1,25 @@
 view = {
     display: function(data) {
         this.canvas.data = data;
-        this.imgData = ctx.createImageData(canvas.width, canvas.height); 
-        this.canvas.cascadeDraw(this.imgData, 0, 0);
+        this.imgData = ctx.createImageData(canvas.width, canvas.height);
+        this.canvas.setImgData(this.imgData);
+        this.canvas.cascadeDraw(0, 0);
         ctx.putImageData(this.imgData, 0, 0);
     },
 
     init_units: function() {
         this.box = new CascadeView(null);
-        this.box.draw = function(imgData, x0, y0) {
-            view.drawRect(
-                    imgData,
-
-                    {
-                        x0: x0,
-                        y0: y0,
-                        width: this.width,
-                        height: this.height,
-                    },
-
-                    view.getColor(this.data)
-                );
-        }
+        this.box.draw = function(x0, y0) {
+            var color = view.getColor(this.data);
+            for (var x = 0; x < this.width; ++x)
+                for (var y = 0; y < this.height; ++ y) {
+                    var p = 4 * ((y + y0) * this.imgData.width + x + x0);
+                    this.imgData.data[p] = color.R;
+                    this.imgData.data[p + 1] = color.G;
+                    this.imgData.data[p + 2] = color.B;
+                    this.imgData.data[p + 3] = color.A;
+                }
+        };
 
         this.depot = new CascadeView(this.box);
         this.depot.hMargin = this.depot.vMargin = 0.2;
@@ -56,16 +54,5 @@ view = {
             B: tmp,
             A: 255,
         };
-    },
-
-    drawRect: function(imgData, rect, color) {
-        for (var x = 0; x < rect.width; ++x)
-            for (var y = 0; y < rect.height; ++ y) {
-                var p = 4 * ((y + rect.y0) * imgData.width + x + rect.x0);
-                imgData.data[p] = color.R;
-                imgData.data[p + 1] = color.G;
-                imgData.data[p + 2] = color.B;
-                imgData.data[p + 3] = color.A;
-            }
     },
 };

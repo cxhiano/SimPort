@@ -15,7 +15,6 @@ var updater = {
 
     onSuccess: function(data) {
         instr = eval('(' + data +')');
-        console.log(instr);
         $('#instructions').append(data);
         updater.errorSleepTime = 500;
         window.setTimeout(updater.poll, 0);
@@ -32,12 +31,38 @@ var updater = {
         for (var arg in instr) {
             instr[arg] = instr[arg][0];
         }
+
         var d = Depot.prototype.getInstance(instr['dr'], instr['dc']);
-        console.log(instr);
-        if (instr['lift'] === 'l') {
-            d.lLift.moveTo(instr['pos']);
-        } else {
-            d.rLift.moveTo(instr['pos']);
+
+        switch(instr['instr']) {
+            case 'move':
+                if (instr['lift'] === 'l') {
+                    d.lLift.moveTo(instr['to']);
+                } else {
+                    d.rLift.moveTo(instr['to']);
+                }
+                break;
+
+            case 'set':
+                d.updateBox(instr['br'], instr['bc'], instr['cnt']);
+                break;
+
+            case 'pickup':
+                if (instr['lift'] === 'l') {
+                    d.lLift.pickUp(instr['row']);
+                } else {
+                    d.rLift.pickUp(instr['row']);
+                }
+                break;
+
+            case 'putdown':
+                if (instr['lift'] === 'l') {
+                    d.lLift.putDown(instr['row']);
+                } else {
+                    d.rLift.putDown(instr['row']);
+                }
+                break;
         }
+
     }
 };
