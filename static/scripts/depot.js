@@ -19,11 +19,13 @@ Depot.prototype = {
     },
 
     init: function() {
+        $('.lift').remove();
         Depot.prototype.depots = [];
+        var d = Depot.prototype.depots;
         for (var i = 0; i < view.canvas.rows; ++i) {
-            Depot.prototype.depots.push([])
+            d.push([]);
             for (var j = 0; j < view.canvas.columns; ++j) {
-                Depot.prototype.depots[i].push(new Depot(i, j));
+                d[i].push(new Depot(i, j));
             }
         }
     },

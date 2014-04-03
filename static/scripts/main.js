@@ -35,6 +35,7 @@ function registerEvents() {
         view.config(args);
         var data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], args.maxStacks);
         view.display(data);
+        Depot.prototype.init();
     });
 }
 
@@ -71,6 +72,5 @@ $(document).ready(function() {
     registerEvents();
     initNavigator();
     $('#set').click();
-    Depot.prototype.init();
     instrUpdater.poll();
 });
