@@ -35,14 +35,8 @@ Lift.prototype = {
     },
 
     addJob: function(job) {
-        console.log(job);
-        if (this.idle) {
-            this.idle = false;
-            job();
-        } else {
-            this.jobQueue.push(job);
-        }
-        console.log(this.jobQueue);
+        this.jobQueue.push(job);
+        this.scheduleJobs();
     },
 
     scheduleJobs: function() {
@@ -76,12 +70,10 @@ Lift.prototype = {
     },
 
     pickUp: function(row) {
-        if (!this.moving) {
-            var cnt = this.depot.getBoxCount(row, this.column);
-            if (cnt > 0) {
-                this.depot.updateBox(row, this.column, cnt - 1);
-                this.hasBox = true;
-            }
+        var cnt = this.depot.getBoxCount(row, this.column);
+        if (cnt > 0 && !this.hasBox) {
+            this.depot.updateBox(row, this.column, cnt - 1);
+            this.hasBox = true;
         }
         this.idle = true;
         this.scheduleJobs();
