@@ -72,5 +72,5 @@ $(document).ready(function() {
     registerEvents();
     initNavigator();
     $('#set').click();
-    Lift.instrUpdater.poll();
+    instrUpdater.poll();
 });

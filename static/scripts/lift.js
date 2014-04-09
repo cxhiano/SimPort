@@ -95,8 +95,6 @@ Lift.instrHandler = function(instr) {
     lift.addJob(job.work.bind(lift, instr));
 };
 
-Lift.instrUpdater = new Updater('instr/get', Lift.instrHandler);
-
 Lift.prototype = {
     getXY: function(row, column) {
         return view.getXY({
@@ -106,7 +104,6 @@ Lift.prototype = {
             columnBox: column,
             });
     },
-
 
     addJob: function(job) {
         this.jobQueue.push(job);
