@@ -7,7 +7,6 @@ Updater.prototype = {
     errorSleepTime: 500,
 
     onSuccess: function(data) {
-        console.log(this);
         data = eval('(' + data +')');
         for (var arg in data) {
             data[arg] = data[arg][0];

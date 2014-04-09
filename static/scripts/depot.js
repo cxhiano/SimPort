@@ -3,14 +3,8 @@ function Depot(row, column) {
     this.column = column;
     this.velocity = 20;                 //px per sec
     this.data = view.canvas.data[row][column];
-    this.lLift = new Lift(this, {
-        column: 0,
-        velocity: this.velocity,
-    });
-    this.rLift = new Lift(this, {
-        column: 1,
-        velocity: this.velocity,
-    });
+    this.lLift = new Lift(this, 0, 1);
+    this.rLift = new Lift(this, 1, 2);
 }
 
 Depot.prototype = {
@@ -31,7 +25,6 @@ Depot.prototype = {
     },
 
     updateBox: function(row, column, cnt) {
-        console.log(this);
         var pos = view.getXY({
             rowDepot: this.row,
             columnDepot: this.column,

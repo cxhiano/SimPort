@@ -8,21 +8,8 @@ instrHandler = function(instr) {
         lift = d.rLift;
     }
 
-    var job;
-    switch(instr['instr']) {
-        case 'move':
-            job = lift.moveTo.bind(lift, instr['column']);
-            break;
-
-        case 'pickup':
-            job = lift.pickUp.bind(lift, instr['row']);
-            break;
-
-        case 'putdown':
-            job = lift.putDown.bind(lift, instr['row']);
-            break;
-    }
-    lift.addJob(job);
+    var job = lift[instr['instr']];
+    lift.addJob(job.work.bind(lift, instr));
 };
 
 instrUpdater = new Updater('instr/get', instrHandler);
