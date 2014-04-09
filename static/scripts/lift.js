@@ -137,23 +137,44 @@ hmove: {
         },
     },
 
-    pickUp: function() {
-        var cnt = this.depot.getBoxCount(row, this.column);
-        if (cnt > 0 && this.carry === -1) {
-            this.depot.updateBox(row, this.column, cnt - 1);
-            this.carry = 1;
-        }
-        this.idle = true;
-        this.scheduleJobs();
+    pickup: {
+        params: {
+            interval: 10000,
+        },
+
+        work: function(args) {
+            var fun = function() {
+                console.log('hehe');
+                var cnt = this.depot.getBoxCount(this.lift.pos, this.arm.pos);
+                if (cnt > 0 && this.carry === -1) {
+                    this.depot.updateBox(this.lift.pos, this.arm.pos, cnt - 1);
+                    this.carry = 1;
+                }
+                this.idle = true;
+                this.scheduleJobs();
+                };
+
+            setTimeout(fun.bind(this), this.pickup.params.interval);
+        },
     },
 
-    putDown: function() {
-        var cnt = this.depot.getBoxCount(row, this.column);
-        if (this.carry != -1) {
-            this.depot.updateBox(row, this.column, cnt + 1);
-            this.carry = -1;
-        }
-        this.idle = true;
-        this.scheduleJobs();
-    }
+    putdown: {
+        params: {
+            interval: 10000,
+        },
+
+        work: function(args) {
+            var fun = function() {
+                var cnt = this.depot.getBoxCount(this.lift.pos, this.arm.pos);
+                if (this.carry != -1) {
+                    this.depot.updateBox(this.lift.pos, this.arm.pos, cnt + 1);
+                    this.carry = -1;
+                }
+                this.idle = true;
+                this.scheduleJobs();
+                };
+
+            setTimeout(fun.bind(this), this.pickup.params.interval);
+        },
+    },
 };
