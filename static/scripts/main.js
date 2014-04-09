@@ -14,7 +14,7 @@ function initContext() {
 
 function generateData(dim, max) {
     if (dim.length == 0) {
-        return parseInt(Math.random() * (max + 1));
+        return [];
     }
 
     var ret = [];
@@ -35,7 +35,7 @@ function registerEvents() {
         view.config(args);
         var data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], args.maxStacks);
         view.display(data);
-        Depot.prototype.init();
+        Depot.init();
     });
 }
 
@@ -72,5 +72,5 @@ $(document).ready(function() {
     registerEvents();
     initNavigator();
     $('#set').click();
-    instrUpdater.poll();
+    Lift.instrUpdater.poll();
 });

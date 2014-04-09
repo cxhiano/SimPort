@@ -10,7 +10,7 @@ view = {
     init_units: function() {
         this.box = new CascadeView(null);
         this.box.draw = function(x0, y0) {
-            var color = view.getColor(this.data);
+            var color = view.getColor(this.data.length);
             for (var x = 0; x < this.width; ++x)
                 for (var y = 0; y < this.height; ++ y) {
                     var p = 4 * ((y + y0) * this.imgData.width + x + x0);

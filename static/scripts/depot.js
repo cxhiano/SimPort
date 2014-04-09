@@ -6,13 +6,11 @@ function Depot(row, column) {
     this.lLift = new Lift(this, 0, 1);
     this.rLift = new Lift(this, 1, 2);
 }
-
-Depot.prototype = {
-    getInstance: function(row, column) {
+Depot.getInstance = function(row, column) {
         return Depot.prototype.depots[row][column];
-    },
+    };
 
-    init: function() {
+Depot.init = function() {
         $('.lift').remove();
         Depot.prototype.depots = [];
         var d = Depot.prototype.depots;
@@ -24,6 +22,15 @@ Depot.prototype = {
         }
     },
 
+Depot.instrHandler = function(instr) {
+    var d = Depot.getInstance(instr['dr'], instr['dc']);
+
+    d[instr['instr']](instr);
+};
+
+Depot.instrUpdater = new Updater('instr/get', Depot.instrHandler);
+
+Depot.prototype = {
     updateBox: function(row, column, cnt) {
         var pos = view.getXY({
             rowDepot: this.row,
@@ -38,6 +45,6 @@ Depot.prototype = {
     },
 
     getBoxCount: function(row, column) {
-        return this.data[row][column];
-    }
+        return this.data[row][column].length;
+    },
 };
