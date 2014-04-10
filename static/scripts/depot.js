@@ -28,8 +28,6 @@ Depot.instrHandler = function(instr) {
     d[instr['instr']](instr);
 };
 
-Depot.instrUpdater = new Updater('instr/get', Depot.instrHandler);
-
 Depot.prototype = {
     updateBox: function(row, column) {
         var pos = view.getXY({
@@ -47,19 +45,19 @@ Depot.prototype = {
         return this.data[row][column].length;
     },
 
-    addBox: function(row, column, box) {
-        if (this.getBoxCount(row, column) < 6) {
-            this.data[row][column].push(box);
-            this.updateBox(row, column);
+    addBox: function(args) {
+        if (this.getBoxCount(args.row, args.column) < 6) {
+            this.data[args.row][args.column].push(args.box);
+            this.updateBox(args.row, args.column);
             return true;
         }
         return false;
     },
 
-    takeBox: function(row, column) {
-        if (this.getBoxCount(row, column) > 0) {
-            var ret = this.data[row][column].pop();
-            this.updateBox(row, column);
+    takeBox: function(args) {
+        if (this.getBoxCount(args.row, args.column) > 0) {
+            var ret = this.data[args.row][args.column].pop();
+            this.updateBox(args.row, args.column);
             return ret;
         }
         return -1;
