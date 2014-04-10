@@ -160,8 +160,7 @@ Lift.prototype = {
             if (cnt > 0 && this.carry === -1) {
                 var fun = function() {
                     console.log('hehe');
-                    this.depot.updateBox(this.lift.pos, this.arm.pos, cnt - 1);
-                    this.carry = 1;
+                    this.carry = this.depot.takeBox(this.lift.pos, this.arm.pos);
 
                     this.idle = true;
                     this.scheduleJobs();
@@ -186,7 +185,7 @@ Lift.prototype = {
             var cnt = this.depot.getBoxCount(this.lift.pos, this.arm.pos);
             if (this.carry != -1) {
                 var fun = function() {
-                    this.depot.updateBox(this.lift.pos, this.arm.pos, cnt + 1);
+                    this.depot.addBox(this.lift.pos, this.arm.pos, this.carry);
                     this.carry = -1;
 
                     this.idle = true;

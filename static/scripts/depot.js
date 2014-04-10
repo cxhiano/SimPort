@@ -31,20 +31,37 @@ Depot.instrHandler = function(instr) {
 Depot.instrUpdater = new Updater('instr/get', Depot.instrHandler);
 
 Depot.prototype = {
-    updateBox: function(row, column, cnt) {
+    updateBox: function(row, column) {
         var pos = view.getXY({
             rowDepot: this.row,
             columnDepot: this.column,
             rowBox: row,
             columnBox: column,
             });
-        this.data[row][column] = cnt;
-        view.box.data = cnt;
+        view.box.data = this.data[row][column];
         view.box.cascadeDraw(pos.x, pos.y);
         view.box.render();
     },
 
     getBoxCount: function(row, column) {
         return this.data[row][column].length;
+    },
+
+    addBox: function(row, column, box) {
+        if (this.getBoxCount(row, column) < 6) {
+            this.data[row][column].push(box);
+            this.updateBox(row, column);
+            return true;
+        }
+        return false;
+    },
+
+    takeBox: function(row, column) {
+        if (this.getBoxCount(row, column) > 0) {
+            var ret = this.data[row][column].pop();
+            this.updateBox(row, column);
+            return ret;
+        }
+        return -1;
     },
 };
