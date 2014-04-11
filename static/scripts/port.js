@@ -1,4 +1,5 @@
-function CascadeView(sub) {
+function CascadeView(ctx, sub) {
+    this.ctx = ctx;
     this.sub = sub;
 }
 
@@ -20,7 +21,7 @@ CascadeView.prototype = {
     },
 
     render: function() {
-        ctx.putImageData(this.imgData, 0, 0, this.x0, this.y0, this.width, this.height);
+        this.ctx.putImageData(this.imgData, 0, 0, this.x0, this.y0, this.width, this.height);
     },
 
     updateLayout: function() {
@@ -63,19 +64,32 @@ CascadeView.prototype = {
     }
 };
 
-view = {
+function Port() {
+    this.canvas = document.getElementById('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.canvas.height = window.innerHeight;
+    this.canvas.width = window.innerWidth;
+}
+
+Port.prototype = {
     display: function(data) {
-        this.canvas.data = data;
-        this.imgData = ctx.createImageData(canvas.width, canvas.height);
-        this.canvas.setImgData(this.imgData);
-        this.canvas.cascadeDraw(0, 0);
-        ctx.putImageData(this.imgData, 0, 0);
+        this.field.data = data;
+        this.imgData = this.ctx.createImageData(this.field.width, this.field.height);
+        this.field.setImgData(this.imgData);
+        this.field.cascadeDraw(0, 0);
+        this.ctx.putImageData(this.imgData, 0, 0);
     },
 
     init_units: function() {
-        this.box = new CascadeView(null);
+        this.box = new CascadeView(this.ctx, null);
         this.box.draw = function(x0, y0) {
-            var color = view.getColor(this.data.length);
+            var tmp = 255 - this.data.length / 6 * 255;
+                color = {
+                    R: 255,
+                    G: tmp,
+                    B: tmp,
+                    A: 255,
+                };
             for (var x = 0; x < this.width; ++x)
                 for (var y = 0; y < this.height; ++ y) {
                     var p = 4 * ((y + y0) * this.imgData.width + x + x0);
@@ -86,38 +100,28 @@ view = {
                 }
         };
 
-        this.depot = new CascadeView(this.box);
+        this.depot = new CascadeView(this.ctx, this.box);
         this.depot.hMargin = this.depot.vMargin = 0.2;
 
-        this.canvas = new CascadeView(this.depot);
-        this.canvas.hMargin = this.canvas.vMargin = 0.2;
+        this.field = new CascadeView(this.ctx, this.depot);
+        this.field.hMargin = this.field.vMargin = 0.2;
     },
 
     config: function(args) {
         this.depot.rows = args.depotRows;
         this.depot.columns = args.depotColumns;
-        this.canvas.rows = args.rows;
-        this.canvas.columns = args.columns;
+        this.field.rows = args.rows;
+        this.field.columns = args.columns;
         this.maxStacks = args.maxStacks;
-        this.canvas.updateLayout();
+        this.field.updateLayout();
     },
 
     getXY: function(pos) {
-        var xy = this.canvas.getXY(pos.rowDepot, pos.columnDepot),
+        var xy = this.field.getXY(pos.rowDepot, pos.columnDepot),
             d_xy = this.depot.getXY(pos.rowBox, pos.columnBox);
         return {
             x: xy.x + d_xy.x,
             y: xy.y + d_xy.y,
-        };
-    },
-
-    getColor: function(data) {
-        var tmp = 255 - data / this.maxStacks * 255;
-        return {
-            R: 255,
-            G: tmp,
-            B: tmp,
-            A: 255,
         };
     },
 };

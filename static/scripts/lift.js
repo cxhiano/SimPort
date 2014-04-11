@@ -59,22 +59,22 @@ function Lift(depot, row, column) {
     this.carry = -1;
     this.jobQueue = [];
 
-    this.arm = new DivComponent(this, view.box.width, view.depot.height);
+    this.arm = new DivComponent(this, port.box.width, port.depot.height);
     this.arm.pos = column;
     this.arm.getXY = function(pos) {
         var xy = this.master.getXY(0, pos);
-        xy.y -= view.depot.vSpace;
+        xy.y -= port.depot.vSpace;
         return xy;
     };
     this.arm.display({});
 
-    this.lift = new DivComponent(this, view.box.width + view.depot.hSpace, view.box.height);
+    this.lift = new DivComponent(this, port.box.width + port.depot.hSpace, port.box.height);
     this.lift.pos = row;
     this.lift.getXY = function() {
         var row = arguments[0],
             column = arguments[1] || this.master.arm.pos,
             xy = this.master.getXY(row, column);
-        xy.x -= view.depot.hSpace / 2;
+        xy.x -= port.depot.hSpace / 2;
         return xy;
     };
     this.lift.display({});
@@ -97,7 +97,7 @@ Lift.instrHandler = function(instr) {
 
 Lift.prototype = {
     getXY: function(row, column) {
-        return view.getXY({
+        return port.getXY({
             rowDepot: this.depot.row,
             columnDepot: this.depot.column,
             rowBox: row,

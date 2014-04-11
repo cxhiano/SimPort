@@ -2,7 +2,7 @@ function Depot(row, column) {
     this.row = row;
     this.column = column;
     this.velocity = 20;                 //px per sec
-    this.data = view.canvas.data[row][column];
+    this.data = port.field.data[row][column];
     this.lLift = new Lift(this, 0, 1);
     this.rLift = new Lift(this, 1, 2);
 }
@@ -14,9 +14,9 @@ Depot.init = function() {
         $('.lift').remove();
         Depot.prototype.depots = [];
         var d = Depot.prototype.depots;
-        for (var i = 0; i < view.canvas.rows; ++i) {
+        for (var i = 0; i < port.field.rows; ++i) {
             d.push([]);
-            for (var j = 0; j < view.canvas.columns; ++j) {
+            for (var j = 0; j < port.field.columns; ++j) {
                 d[i].push(new Depot(i, j));
             }
         }
@@ -30,15 +30,15 @@ Depot.instrHandler = function(instr) {
 
 Depot.prototype = {
     updateBox: function(row, column) {
-        var pos = view.getXY({
+        var pos = port.getXY({
             rowDepot: this.row,
             columnDepot: this.column,
             rowBox: row,
             columnBox: column,
             });
-        view.box.data = this.data[row][column];
-        view.box.cascadeDraw(pos.x, pos.y);
-        view.box.render();
+        port.box.data = this.data[row][column];
+        port.box.cascadeDraw(pos.x, pos.y);
+        port.box.render();
     },
 
     getBoxCount: function(row, column) {

@@ -1,17 +1,3 @@
-function initContext() {
-    fullScreen = function(obj) {
-        obj.width = window.innerWidth;
-        obj.height = window.innerHeight;
-    }
-
-    wrapper = document.getElementById('canvas');
-    canvas = document.getElementById('canvas');
-    data = document.getElementById('data');
-
-    ctx = canvas.getContext('2d');
-    fullScreen(canvas);
-}
-
 function generateData(dim, max) {
     if (dim.length == 0) {
         return [];
@@ -32,9 +18,9 @@ function registerEvents() {
             args[this.id] = parseInt(this.value);
         });
 
-        view.config(args);
+        port.config(args);
         var data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], args.maxStacks);
-        view.display(data);
+        port.display(data);
         Depot.init();
     });
 }
@@ -66,11 +52,12 @@ function initNavigator() {
 }
 
 $(document).ready(function() {
-    initContext();
-    view.init_units();
-    view.canvas.setSize(canvas.width, canvas.height);
+    port = new Port();
+    port.init_units();
+    port.field.setSize(window.innerWidth, window.innerHeight);
     registerEvents();
     initNavigator();
     $('#set').click();
+    console.log(port);
     instrUpdater.poll();
 });
