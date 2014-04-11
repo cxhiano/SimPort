@@ -52,12 +52,13 @@ function initNavigator() {
 }
 
 $(document).ready(function() {
-    port = new Port();
-    port.init_units();
-    port.field.setSize(window.innerWidth, window.innerHeight);
-    registerEvents();
     initNavigator();
+    registerEvents();
+
+    port = new Port();
+    port.field.setSize(window.innerWidth, window.innerHeight);
+
     $('#set').click();
-    console.log(port);
+
     instrUpdater.poll();
 });

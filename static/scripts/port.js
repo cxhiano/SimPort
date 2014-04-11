@@ -69,6 +69,7 @@ function Port() {
     this.ctx = this.canvas.getContext('2d');
     this.canvas.height = window.innerHeight;
     this.canvas.width = window.innerWidth;
+    this.init_units();
 }
 
 Port.prototype = {
