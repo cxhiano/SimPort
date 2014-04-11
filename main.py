@@ -13,25 +13,24 @@ class InstructionDispatcher():
         self.callback = None
         self.cache = []
 
-    def _dequeue(self):
-        ret = self.cache[0]
-        self.cache.remove(ret)
-        return ret
+    def do_callback(self):
+        if self.callback:
+            try:
+                ret = self.cache[0]
+                self.callback(ret)
+                self.cache.remove(ret)
+                self.callback = None
+            except:
+                logging.error('Error in waiter callback', exc_info = True)
 
     def new(self, instr):
         self.cache.append(instr)
-        if self.callback:
-            try:
-                self.callback(self._dequeue())
-            except:
-                logging.error('Error in waiter callback', exc_info = True)
-            self.waiters = None
+        self.do_callback()
 
     def register(self, callback):
+        self.callback = callback
         if len(self.cache) > 0:
-            callback(self._dequeue())
-        else:
-            self.callback = callback
+            self.do_callback()
 
     def deregister(self):
         self.callback = None
@@ -52,8 +51,9 @@ class InstructionUpdateHandler(RequestHandler):
         dispatcher.deregister()
 
 class NewInstructionHandler(RequestHandler):
-    def get(self):
-        dispatcher.new(self.request.arguments)
+    def post(self):
+        dispatcher.new(self.request.body)
+        self.finish()
 
 def main():
     app = tornado.web.Application(

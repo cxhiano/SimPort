@@ -8,9 +8,6 @@ Updater.prototype = {
 
     onSuccess: function(data) {
         data = eval('(' + data +')');
-        for (var arg in data) {
-            data[arg] = data[arg][0];
-        }
         this.errorSleepTime = 500;
         window.setTimeout(this.poll.bind(this), 0);
         this.handler(data);

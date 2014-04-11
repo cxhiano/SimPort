@@ -72,11 +72,11 @@ function Lift(depot, row, column) {
     this.lift.pos = row;
     this.lift.getXY = function() {
         var row = arguments[0],
-            column = arguments[1] || this.master.arm.pos,
+            column = (arguments[1] == undefined)?this.master.arm.pos:arguments[1],
             xy = this.master.getXY(row, column);
         xy.x -= port.depot.hSpace / 2;
         return xy;
-    };
+    }
     this.lift.display({});
 }
 
@@ -91,7 +91,6 @@ Lift.instrHandler = function(instr) {
     }
 
     var job = lift[instr['instr']];
-    console.log(job);
     lift.addJob(job.work.bind(lift, instr));
 };
 
@@ -128,7 +127,8 @@ Lift.prototype = {
             var v = this.hMove.params.velocity,
                 to = this.lift.getXY(this.lift.pos, args.column),
                 t = this.lift.getMoveTime(to, v);
-                this.lift.element.animate({
+                this.lift.element.animate(
+                    {
                         left: to.x,
                         top: to.y,
                     }, {
