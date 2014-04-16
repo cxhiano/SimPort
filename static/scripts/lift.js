@@ -72,25 +72,25 @@ function Lift(depot, row, column) {
     this.lift.pos = row;
     this.lift.getXY = function() {
         var row = arguments[0],
-            column = (arguments[1] == undefined)?this.master.arm.pos:arguments[1],
+        column = (arguments[1] === undefined)?this.master.arm.pos:arguments[1],
             xy = this.master.getXY(row, column);
         xy.x -= port.depot.hSpace / 2;
         return xy;
-    }
+    };
     this.lift.display({});
 }
 
 Lift.instrHandler = function(instr) {
-    var d = Depot.getInstance(instr['dr'], instr['dc']),
+    var d = Depot.getInstance(instr.dr, instr.dc),
         lift = null;
 
-    if (instr['lift'] === 'l') {
+    if (instr.lift === 'l') {
         lift = d.lLift;
     } else {
         lift = d.rLift;
     }
 
-    var job = lift[instr['instr']];
+    var job = lift[instr.instr];
     lift.addJob(job.work.bind(lift, instr));
 };
 

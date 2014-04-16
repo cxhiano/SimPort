@@ -1,15 +1,15 @@
 import tornado.httpclient as http
 
-def sendInstr(instr):
+def send_instr(instr):
     req = http.HTTPRequest(
         'http://localhost:8888/instr/new',
-        method = 'POST',
-        body = str(instr),
+        method='POST',
+        body=str(instr),
         )
     try:
-        response = client.fetch(req)
-    except http.HTTPError as e:
-        print e
+        client.fetch(req)
+    except http.HTTPError as ex:
+        print ex
 
 if __name__ == '__main__':
     client = http.HTTPClient()
@@ -26,5 +26,5 @@ if __name__ == '__main__':
             instr['dr'] = y
             for z in range(5):
                 instr['dc'] = z
-                sendInstr(instr)
+                send_instr(instr)
     client.close()

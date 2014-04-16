@@ -1,0 +1,27 @@
+{
+    "folders":
+    [
+        {
+            "path": "~/Desktop/workplace/SimPort",
+            "folder_exclude_patterns": ["static"],
+            "file_exclude_patterns": ["log", "*.pyc"]
+        },
+
+        {
+
+            "path": "/home/cxhiano/Desktop/workplace/SimPort/static/scripts/",
+        }
+    ],
+
+    "settings":
+    {
+
+    },
+
+    "build_systems":
+    [
+        {
+            
+        }
+    ]
+}
