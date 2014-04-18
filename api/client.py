@@ -1,20 +1,24 @@
 import tornado.httpclient as http
+import logging
 import json
 
-def send_instr(instr):
-    print instr
-    req = http.HTTPRequest(
-        'http://localhost:8888/instr/new',
-        method='POST',
-        body=json.dumps(instr)
-        )
-    try:
-        print client.fetch(req).body
-    except http.HTTPError as ex:
-        print ex
+class Client(http.HTTPClient):
+    def send(self, instr):
+        logging.debug(instr)
+        req = http.HTTPRequest(
+            'http://localhost:8888/instr/new',
+            method='POST',
+            body=json.dumps(instr)
+            )
+        try:
+            ret = self.fetch(req).body
+            logging.debug(ret)
+            return json.loads(ret)
+        except http.HTTPError as ex:
+            logging.error(ex)
 
-if __name__ == '__main__':
-    client = http.HTTPClient()
+def test():
+    client = Client()
     instr = {
         'instr': 'addBox',
         'dr': 0,
@@ -30,9 +34,8 @@ if __name__ == '__main__':
                     instr['row'] = x
                     instr['column'] = y
                     instr['box'] = str(cnt)
-                    print instr
                     cnt += 1
-                    send_instr(instr)
+                    client.send(instr)
     for x in range(2):
         for y in range(2):
             instr = {
@@ -41,7 +44,7 @@ if __name__ == '__main__':
                 'dc': y,
                 'lift': 'l'
             }
-            send_instr(instr)
+            client.send(instr)
             instr = {
                 'instr': 'hMove',
                 'dr': x,
@@ -49,7 +52,7 @@ if __name__ == '__main__':
                 'lift': 'l',
                 'column': 4,
             }
-            send_instr(instr)
+            client.send(instr)
             instr = {
                 'instr': 'vMove',
                 'dr': x,
@@ -57,14 +60,14 @@ if __name__ == '__main__':
                 'lift': 'l',
                 'row': 4,
             }
-            send_instr(instr)
+            client.send(instr)
             instr = {
                 'instr': 'putdown',
                 'dr': x,
                 'dc': y,
                 'lift': 'l'
             }
-            send_instr(instr)
+            client.send(instr)
             instr = {
                 'instr': 'vMove',
                 'dr': x,
@@ -72,5 +75,9 @@ if __name__ == '__main__':
                 'lift': 'l',
                 'row': 0,
             }
-            send_instr(instr)
+            client.send(instr)
     client.close()
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    test()

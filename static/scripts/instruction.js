@@ -11,7 +11,13 @@ Instruction.register = function(instr) {
 };
 
 Instruction.call = function(args) {
-    return Instruction.instrs[args.instr].call(args);
+    var instr = Instruction.instrs[args.instr];
+    if (instr) {
+        return instr.call(args);
+    }
+    return {
+        status: 3,  //no such method
+    };
 };
 
 Instruction.prototype = {
@@ -35,7 +41,7 @@ Instruction.prototype = {
     call: function(args) {
         if (this.invalidArgs(args)) {
             return {
-                status: 2,
+                status: 2,  //invalid arguments
             };
         }
 
@@ -45,12 +51,12 @@ Instruction.prototype = {
         }
         if (this.preCond === undefined || this.preCond.call(ctx, args)) {
             return {
-                status: 0,
+                status: 0,  //ok
                 result: this.process.call(ctx, args),
             };
         } else {
             return {
-                status: 1,
+                status: 1,  //pre condition not satisfied
             };
         }
     }

@@ -165,6 +165,23 @@ Lift.registerInstructions = function() {
         }
     );
     instr.setContextGetter(getLift);
+
+    instr = new Instruction(
+        {
+            instr: 'getPosition',
+            dr: 0,
+            dc: 0,
+            lift: 'l',
+        },
+
+        function(args) {
+            return {
+                row: this.lift.pos,
+                column: this.arm.pos,
+            };
+        }
+    );
+    instr.setContextGetter(getLift);
 };
 
 Lift.prototype = {
