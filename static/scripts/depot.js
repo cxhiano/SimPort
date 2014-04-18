@@ -32,18 +32,16 @@ Depot.registerInstructions = function() {
 
     instr = new Instruction(
         {
-            'instr': 'addBox',
-            'dr': 0,
-            'dc': 0,
-            'row': 0,
-            'column': 0,
-            'box': 123444,
+            instr: 'addBox',
+            dr: 0,
+            dc: 0,
+            row: 0,
+            column: 0,
+            box: 'a',
         },
 
         function(args) {
-            this.data[args.row][args.column].push(args.box);
-            this.updateBox(args.row, args.column);
-            return args.box;
+            this.addBox(args.row, args.column, args.box);
         }
     );
     instr.setContextGetter(getDepot);
@@ -53,17 +51,15 @@ Depot.registerInstructions = function() {
 
     instr = new Instruction(
         {
-            'instr': 'takeBox',
-            'dr': 0,
-            'dc': 0,
-            'row': 0,
-            'column': 0,
+            instr: 'takeBox',
+            dr: 0,
+            dc: 0,
+            row: 0,
+            column: 0,
         },
 
         function(args) {
-            var ret = this.data[args.row][args.column].pop();
-            this.updateBox(args.row, args.column);
-            return ret;
+            return this.takeBox(args.row, args.column);
         }
     );
     instr.setContextGetter(getDepot);
@@ -89,4 +85,14 @@ Depot.prototype = {
         return this.data[row][column].length;
     },
 
+    takeBox: function(row, column) {
+        var ret = this.data[row][column].pop();
+        this.updateBox(row, column);
+        return ret;
+    },
+
+    addBox: function(row, column, box) {
+        this.data[row][column].push(box);
+        this.updateBox(row, column);
+    },
 };

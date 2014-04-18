@@ -59,6 +59,7 @@ $(document).ready(function() {
     port.field.setSize(window.innerWidth, window.innerHeight);
 
     Depot.registerInstructions();
+    Lift.registerInstructions();
 
     $('#set').click();
 

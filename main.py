@@ -39,8 +39,14 @@ class NewInstructionHandler(RequestHandler):
     '''
     @tornado.web.asynchronous
     def post(self):
-        data = json.loads(self.request.body)
         md.new(self.request.body, self._feedback)
+
+    @tornado.web.asynchronous
+    def get(self):
+        data = self.request.arguments
+        for item in data:
+            data[item] = data[item][0]
+        md.new(json.dumps(data), self._feedback)
 
     def _feedback(self, data):
         if self.request.connection.stream.closed():

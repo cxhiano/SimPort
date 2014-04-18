@@ -80,18 +80,91 @@ function Lift(depot, row, column) {
     this.lift.display({});
 }
 
+Lift.params = {
+    hVelocity: 20,
+    vVelocity: 20,
+    tPickup: 1000,
+    tPutdown: 1000,
+};
+
 Lift.instrHandler = function(instr) {
-    var d = Depot.getInstance(instr.dr, instr.dc),
-        lift = null;
-
-    if (instr.lift === 'l') {
-        lift = d.lLift;
-    } else {
-        lift = d.rLift;
-    }
-
     var job = lift[instr.instr];
     lift.addJob(job.work.bind(lift, instr));
+};
+
+Lift.registerInstructions = function() {
+    var getLift = function(instr) {
+        var d = Depot.getInstance(instr.dr, instr.dc);
+        if (instr.lift === 'l') {
+            return d.lLift;
+        } else {
+            return d.rLift;
+        }
+    };
+
+    var instr = new Instruction(
+        {
+            instr: 'hMove',
+            dr: 0,
+            dc: 0,
+            lift: 'l',
+            column: 4,
+        }, 
+
+        function(args) {
+            this.addJob(this.hMove.bind(this, args.column));
+        }
+    );
+    instr.setContextGetter(getLift);
+    instr.setPreCondition(function(args) {
+        return args.column >= 0;
+    });
+
+    instr = new Instruction(
+        {
+            instr: 'vMove',
+            dr: 0,
+            dc: 0,
+            lift: 'r',
+            row: 3,
+        },
+
+        function(args) {
+            this.addJob(this.vMove.bind(this, args.row));
+        }
+    );
+    instr.setContextGetter(getLift);
+    instr.setPreCondition(function(args) {
+        return args.row >= 0;
+    });
+
+    instr = new Instruction(
+        {
+            instr: 'pickup',
+            dr: 0,
+            dc: 0,
+            lift: 'l',
+        },
+
+        function(args) {
+            this.addJob(this.pickUp.bind(this)); 
+        } 
+    );
+    instr.setContextGetter(getLift);
+
+    instr = new Instruction(
+        {
+            instr: 'putdown',
+            dr: 0,
+            dc: 0,
+            lift: 'r',
+        },
+
+        function(args) {
+            this.addJob(this.putDown.bind(this));
+        }
+    );
+    instr.setContextGetter(getLift);
 };
 
 Lift.prototype = {
@@ -118,93 +191,56 @@ Lift.prototype = {
         }
     },
 
-    hMove: {
-        params: {
-            velocity: 20,
-        },
+    hMove: function(column) {
+        var v = Lift.params.hVelocity,
+            to = this.lift.getXY(this.lift.pos, column),
+            t = this.lift.getMoveTime(to, v);
+            this.lift.element.animate(
+                {
+                    left: to.x,
+                    top: to.y,
+                }, {
+                    duration: t,
+                    easing: 'linear',
+                });
 
-        work: function(args) {
-            var v = this.hMove.params.velocity,
-                to = this.lift.getXY(this.lift.pos, args.column),
-                t = this.lift.getMoveTime(to, v);
-                this.lift.element.animate(
-                    {
-                        left: to.x,
-                        top: to.y,
-                    }, {
-                        duration: t,
-                        easing: 'linear',
-                    });
-
-            this.arm.move(args.column, v);
-        },
+        this.arm.move(column, v);
     },
 
-    vMove: {
-        params: {
-            velocity: 20,
-        },
-
-        work: function(args) {
-            this.lift.move(args.row, this.vMove.params.velocity);
-        },
+    vMove: function(row) {
+        this.lift.move(row, Lift.params.vVelocity);
     },
 
-    pickUp: {
-        params: {
-            duration: 1000,
-        },
+    pickUp: function() {
+        var fun = function() {
+            this.carry = this.depot.takeBox(this.lift.pos, this.arm.pos);
+            this.idle = true;
+            this.scheduleJobs();
+        };
 
-        work: function(args) {
-            var cnt = this.depot.getBoxCount(this.lift.pos, this.arm.pos);
-            if (cnt > 0 && this.carry === -1) {
-                var fun = function() {
-                    this.carry = this.depot.takeBox({
-                        row: this.lift.pos,
-                        column: this.arm.pos,
-                    });
-
-                    this.idle = true;
-                    this.scheduleJobs();
-                    };
-
-                this.lift.element.animate({
-                        opacity: 1,
-                    }, {
-                        duration: this.pickUp.duration,
-                        complete: fun.bind(this),
-                    });
-            }
-        },
+        this.lift.element.animate({
+                opacity: 1,
+            }, {
+                duration: Lift.params.tPickup,
+                complete: fun.bind(this),
+            });
     },
 
-    putDown: {
-        params: {
-            duration: 1000,
-        },
+    putDown: function() {
+        var fun = function() {
+            this.depot.addBox(this.lift.pos, this.arm.pos, this.carry);
+            this.carry = -1;
 
-        work: function(args) {
-            var cnt = this.depot.getBoxCount(this.lift.pos, this.arm.pos);
-            if (this.carry != -1) {
-                var fun = function() {
-                    this.depot.addBox({
-                        row: this.lift.pos,
-                        column: this.arm.pos,
-                        box: this.carry
-                    });
-                    this.carry = -1;
+            this.idle = true;
+            this.scheduleJobs();
+        };
 
-                    this.idle = true;
-                    this.scheduleJobs();
-                };
-
-                this.lift.element.animate({
-                        opacity: 0.3,
-                    }, {
-                        duration: this.putDown.duration,
-                        complete: fun.bind(this),
-                    });
-            }
-        },
+        this.lift.element.animate(
+            {
+                opacity: 0.3,
+            }, {
+                duration: Lift.params.tPutdown,
+                complete: fun.bind(this),
+            });
     },
 };
