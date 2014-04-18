@@ -80,4 +80,11 @@ def test():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    test()
+    client = Client()
+    instr = {
+        'instr': 'putdown',
+        'dr': 0,
+        'dc': 0,
+        'lift': 't'
+    }
+    client.send(instr)

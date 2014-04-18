@@ -47,7 +47,14 @@ Instruction.prototype = {
 
         var ctx = this;
         if (this.ctxGetter) {
-            ctx = this.ctxGetter(args);
+            try {
+                ctx = this.ctxGetter(args);
+            } catch (err) {
+                console.log(err);
+                return {
+                    status: 2,
+                };
+            }
         }
         if (this.preCond === undefined || this.preCond.call(ctx, args)) {
             return {

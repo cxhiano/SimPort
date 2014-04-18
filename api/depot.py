@@ -54,4 +54,5 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     client = client.Client()
     d = Depot(0, 0, client)
-    d.move_box('r', 1, 1, 3, 3)
+    d.move_lift_to('l', 3, 3)
+    

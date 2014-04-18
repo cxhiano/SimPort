@@ -37,11 +37,11 @@ DivComponent.prototype = {
             t = this.getMoveTime(to, velocity);
 
         var onComplete = function() {
-            this.pos = pos;
             this.master.idle = true;
             this.master.scheduleJobs();
         };
 
+        this.pos = pos;
         this.element.animate({
                 left: to.x,
                 top: to.y,
@@ -97,9 +97,10 @@ Lift.registerInstructions = function() {
         var d = Depot.getInstance(instr.dr, instr.dc);
         if (instr.lift === 'l') {
             return d.lLift;
-        } else {
+        } else if (instr.lift === 'r') {
             return d.rLift;
         }
+        throw 'can not find lift' + JSON.stringify(instr);
     };
 
     var instr = new Instruction(
@@ -117,7 +118,7 @@ Lift.registerInstructions = function() {
     );
     instr.setContextGetter(getLift);
     instr.setPreCondition(function(args) {
-        return args.column >= 0;
+        return args.column >= 0 && args.column < port.depot.columns;
     });
 
     instr = new Instruction(
@@ -135,7 +136,7 @@ Lift.registerInstructions = function() {
     );
     instr.setContextGetter(getLift);
     instr.setPreCondition(function(args) {
-        return args.row >= 0;
+        return args.row >= 0 && args.row < port.depot.rows;
     });
 
     instr = new Instruction(
@@ -209,17 +210,25 @@ Lift.prototype = {
     },
 
     hMove: function(column) {
+        if ((this === this.depot.lLift && column >= this.depot.rLift.arm.pos) ||
+            (this === this.depot.rLift && column <= this.depot.lLift.arm.pos)) {
+            console.log(this.depot);
+            this.idle = true;
+            this.scheduleJobs();
+            return false;
+        }
         var v = Lift.params.hVelocity,
             to = this.lift.getXY(this.lift.pos, column),
             t = this.lift.getMoveTime(to, v);
-            this.lift.element.animate(
-                {
-                    left: to.x,
-                    top: to.y,
-                }, {
-                    duration: t,
-                    easing: 'linear',
-                });
+
+        this.lift.element.animate(
+            {
+                left: to.x,
+                top: to.y,
+            }, {
+                duration: t,
+                easing: 'linear',
+            });
 
         this.arm.move(column, v);
     },
@@ -229,6 +238,11 @@ Lift.prototype = {
     },
 
     pickUp: function() {
+        if (this.carry != -1 || this.depot.getBoxCount(this.lift.pos, this.arm.pos) === 0) {
+            this.idle = true;
+            this.scheduleJobs();
+            return false;
+        }
         var fun = function() {
             this.carry = this.depot.takeBox(this.lift.pos, this.arm.pos);
             this.idle = true;
@@ -244,6 +258,11 @@ Lift.prototype = {
     },
 
     putDown: function() {
+        if (this.carry === -1 || this.depot.getBoxCount(this.lift.pos, this.arm.pos) === post.maxStacks) {
+            this.idle = true;
+            this.scheduleJobs();
+            return false;
+        }
         var fun = function() {
             this.depot.addBox(this.lift.pos, this.arm.pos, this.carry);
             this.carry = -1;
