@@ -1,5 +1,5 @@
 function generateData(dim, max) {
-    if (dim.length == 0) {
+    if (dim.length === 0) {
         return [];
     }
 
@@ -57,6 +57,8 @@ $(document).ready(function() {
 
     port = new Port();
     port.field.setSize(window.innerWidth, window.innerHeight);
+
+    Depot.registerInstructions();
 
     $('#set').click();
 

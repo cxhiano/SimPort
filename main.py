@@ -1,12 +1,15 @@
 '''
 Server
 '''
-
 import os.path
+import json
 import logging
 import tornado.ioloop
 import tornado.web
+import media
 from tornado.web import RequestHandler
+
+md = media.Media()
 
 class MainHandler(RequestHandler):
     '''
@@ -15,48 +18,11 @@ class MainHandler(RequestHandler):
     def get(self):
         return self.render('display.html', title='Sim Port')
 
-class InstructionDispatcher(object):
-    '''
-    Send instruction from server to browser
-    '''
-    def __init__(self):
-        self.callback = None
-        self.cache = []
-
-    def do_callback(self):
-        '''
-        using callback to send isntruction
-        '''
-        if self.callback:
-            try:
-                ret = self.cache[0]
-                self.callback(ret)
-                self.cache.remove(ret)
-                self.callback = None
-            except:
-                logging.error('Error in waiter callback', exc_info=True)
-
-    def new(self, instr):
-        '''
-        create a new instruction to be sent to browser
-        '''
-        self.cache.append(instr)
-        self.do_callback()
-
-    def register(self, callback):
-        '''
-        register a callback which will be used to send instruction to browser
-        '''
-        self.callback = callback
-        if len(self.cache) > 0:
-            self.do_callback()
-
-dispatcher = InstructionDispatcher()
-
 class InstructionUpdateHandler(RequestHandler):
     @tornado.web.asynchronous
-    def get(self):
-        dispatcher.register(self._on_new_instruction)
+    def post(self):
+        md.feedback(self.request.body)
+        md.register_updater(self._on_new_instruction)
 
     def _on_new_instruction(self, instr):
         '''
@@ -71,9 +37,15 @@ class NewInstructionHandler(RequestHandler):
     '''
     receive instruction from http request and send it to browser
     '''
+    @tornado.web.asynchronous
     def post(self):
-        dispatcher.new(self.request.body)
-        self.finish()
+        data = json.loads(self.request.body)
+        md.new(self.request.body, self._feedback)
+
+    def _feedback(self, data):
+        if self.request.connection.stream.closed():
+            return
+        self.finish(data)
 
 def main():
     '''
@@ -92,4 +64,5 @@ def main():
     tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == '__main__': 
+    logging.basicConfig(level=logging.DEBUG)
     main()

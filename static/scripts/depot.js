@@ -6,26 +6,70 @@ function Depot(row, column) {
     this.lLift = new Lift(this, 0, 1);
     this.rLift = new Lift(this, 1, 2);
 }
+
 Depot.getInstance = function(row, column) {
-        return Depot.prototype.depots[row][column];
-    };
+    return Depot.prototype.depots[row][column];
+};
 
 Depot.init = function() {
-        $('.lift').remove();
-        Depot.prototype.depots = [];
-        var d = Depot.prototype.depots;
-        for (var i = 0; i < port.field.rows; ++i) {
-            d.push([]);
-            for (var j = 0; j < port.field.columns; ++j) {
-                d[i].push(new Depot(i, j));
-            }
+    $('.lift').remove();
+    Depot.prototype.depots = [];
+    var d = Depot.prototype.depots;
+    for (var i = 0; i < port.field.rows; ++i) {
+        d.push([]);
+        for (var j = 0; j < port.field.columns; ++j) {
+            d[i].push(new Depot(i, j));
         }
-    },
+    }
+};
 
-Depot.instrHandler = function(instr) {
-    var d = Depot.getInstance(instr['dr'], instr['dc']);
+Depot.registerInstructions = function() {
+    getDepot = function(args) {
+        return Depot.getInstance(args.dr, args.dc);
+    };
 
-    d[instr['instr']](instr);
+    var instr;
+
+    instr = new Instruction(
+        {
+            'instr': 'addBox',
+            'dr': 0,
+            'dc': 0,
+            'row': 0,
+            'column': 0,
+            'box': 123444,
+        },
+
+        function(args) {
+            this.data[args.row][args.column].push(args.box);
+            this.updateBox(args.row, args.column);
+            return args.box;
+        }
+    );
+    instr.setContextGetter(getDepot);
+    instr.setPreCondition(function(args) {
+        return this.getBoxCount(args.row, args.column) < 6;
+    });
+
+    instr = new Instruction(
+        {
+            'instr': 'takeBox',
+            'dr': 0,
+            'dc': 0,
+            'row': 0,
+            'column': 0,
+        },
+
+        function(args) {
+            var ret = this.data[args.row][args.column].pop();
+            this.updateBox(args.row, args.column);
+            return ret;
+        }
+    );
+    instr.setContextGetter(getDepot);
+    instr.setPreCondition(function(args) {
+        return this.getBoxCount(args.row, args.column) > 0;
+    });
 };
 
 Depot.prototype = {
@@ -45,21 +89,4 @@ Depot.prototype = {
         return this.data[row][column].length;
     },
 
-    addBox: function(args) {
-        if (this.getBoxCount(args.row, args.column) < 6) {
-            this.data[args.row][args.column].push(args.box);
-            this.updateBox(args.row, args.column);
-            return true;
-        }
-        return false;
-    },
-
-    takeBox: function(args) {
-        if (this.getBoxCount(args.row, args.column) > 0) {
-            var ret = this.data[args.row][args.column].pop();
-            this.updateBox(args.row, args.column);
-            return ret;
-        }
-        return -1;
-    },
 };

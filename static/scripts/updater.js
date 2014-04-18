@@ -6,26 +6,34 @@ function Updater(url, handler) {
 Updater.prototype = {
     errorSleepTime: 500,
 
+    fb_data: [],
+
+    feedback: function(data) {
+        this.fb_data.push(data);
+    },
+
     onSuccess: function(data) {
-        data = eval('(' + data +')');
         this.errorSleepTime = 500;
         window.setTimeout(this.poll.bind(this), 0);
         this.handler(data);
     },
 
-    onError: function(response) {
+    onError: function(jqXHR, textStatus, errorThrown) {
         this.errorSleepTime *= 2;
-        console.log(response);
-        window.setTimeout(this.poll, this.errorSleepTime);
+        console.log(textStatus);
+        console.log(errorThrown);
+        window.setTimeout(this.poll.bind(this), this.errorSleepTime);
     },
 
     poll: function() {
         $.ajax({
             url: this.url,
-            type: 'GET',
-            dataType: 'text',
-            success: this.onSuccess.bind(this),
-            error: this.onError.bind(this),
+            type: 'POST',
+            data: JSON.stringify(this.fb_data),
+            dataType: 'json',
+            context: this,
+            success: this.onSuccess,
+            error: this.onError,
         });
     }
 };

@@ -1,8 +1,7 @@
 function dispatcher(instr) {
-    [Lift, Depot].forEach(function(item) {
-        if (instr['instr'] in item.prototype) {
-            item.instrHandler(instr);
-        }
+    instr.forEach(function(item) {
+        console.log(item);
+        Instruction.call(JSON.parse(item));
     });
 }
 
