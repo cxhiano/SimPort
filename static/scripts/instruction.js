@@ -50,6 +50,7 @@ Instruction.prototype = {
             try {
                 ctx = this.ctxGetter(args);
             } catch (err) {
+                console.log(args)
                 console.log(err);
                 return {
                     status: 2,
@@ -57,10 +58,18 @@ Instruction.prototype = {
             }
         }
         if (this.preCond === undefined || this.preCond.call(ctx, args)) {
-            return {
-                status: 0,  //ok
-                result: this.process.call(ctx, args),
-            };
+            try {
+                return {
+                    status: 0,  //ok
+                    result: this.process.call(ctx, args),
+                };
+            } catch (err) {
+                console.log(args)
+                console.log(err);
+                return {
+                    status: 3,  //runtime error
+                };
+            }
         } else {
             return {
                 status: 1,  //pre condition not satisfied

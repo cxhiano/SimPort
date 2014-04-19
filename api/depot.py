@@ -1,13 +1,18 @@
 import client
 import logging
+import lift
 
 class Depot(object):
-    def __init__(self, row, column, client):
+    def __init__(self, dr, dc, client):
         self.instr = {
-            'dr': row,
-            'dc': column,
-        }
+            'dr': dr,
+            'dc': dc,
+            }
         self.client = client
+        self.lifts = {
+            'l': lift.Lift(dr, dc, 'l', client),
+            'r': lift.Lift(dr, dc, 'r', client),
+            }
 
     def _exc_instr(self, args):
         ret = self.instr.copy()
@@ -27,52 +32,23 @@ class Depot(object):
             'column': c,
             })
 
-    def move_lift_to(self, lift, r, c, src = None):
-        if src == None:
-            src = self._exc_instr({
-                'instr': 'getPosition',
-                'lift': lift,
-                })['result']
-
-        if src['column'] != c:
-            self._exc_instr({
-                    'instr': 'hMove',
-                    'lift': lift,
-                    'column': c,
-                })
-
-        if src['row'] != r:
-            self._exc_instr({
-                    'instr': 'vMove',
-                    'lift': lift,
-                    'row': r,
-                })
-
     def move_box(self, lift, src_r, src_c, dst_r, dst_c):
-        self.move_lift_to(lift, src_r, src_c)
-
-        self._exc_instr({
-            'instr': 'pickup',
-            'lift': lift,
-            })
-        
-        self.move_lift_to(lift, dst_r, dst_c, src={'row': src_r, 'column': src_c})
-
-        self._exc_instr({
-            'instr': 'putdown',
-            'lift': lift,
-            })
+        l = self.lifts[lift]
+        l.move_to(src_r, src_c)
+        l.pickup()
+        l.move_to(dst_r, dst_c)
+        l.putdown()
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     client = client.Client()
     d = Depot(0, 0, client)
-    print d.get_boxes(0, 1)
-    '''
     d.set_boxes([[['boxA', 'boxB', 'boxC'], [], [], [], []],
                    [[], [], [], [], []],
                    [[], [], [], [], []],
                    [[], [], [], [], []],
                    [[], [], [], [], ['boxD']]]);
+    d.move_box('l', 0, 0, 0, 1)
+    d.move_box('l', 0, 0, 1, 1)
+    d.move_box('l', 0, 0, 2, 1)
     print d.get_boxes(0, 0)
-    '''
