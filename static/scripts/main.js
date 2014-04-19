@@ -58,9 +58,6 @@ $(document).ready(function() {
     port = new Port();
     port.field.setSize(window.innerWidth, window.innerHeight);
 
-    Depot.registerInstructions();
-    Lift.registerInstructions();
-
     $('#set').click();
 
     instrUpdater.poll();

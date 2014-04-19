@@ -14,6 +14,19 @@ class Depot(object):
         ret.update(args)
         return self.client.send(ret)
 
+    def set_boxes(self, data):
+        self._exc_instr({
+            'instr': 'setDepotBoxes',
+            'data': data,
+            });
+
+    def get_boxes(self, r, c):
+        return self._exc_instr({
+            'instr': 'getBoxes',
+            'row': r,
+            'column': c,
+            })
+
     def move_lift_to(self, lift, r, c, src = None):
         if src == None:
             src = self._exc_instr({
@@ -54,5 +67,12 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     client = client.Client()
     d = Depot(0, 0, client)
-    d.move_lift_to('l', 3, 3)
-    
+    print d.get_boxes(0, 1)
+    '''
+    d.set_boxes([[['boxA', 'boxB', 'boxC'], [], [], [], []],
+                   [[], [], [], [], []],
+                   [[], [], [], [], []],
+                   [[], [], [], [], []],
+                   [[], [], [], [], ['boxD']]]);
+    print d.get_boxes(0, 0)
+    '''
