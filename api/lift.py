@@ -1,45 +1,17 @@
 import client
 import logging
+from functools import partial
 
 class Lift(object):
     def __init__(self, dr, dc, lift, client):
-        self.instr = {
-            'dr': dr,
-            'dc': dc,
-            'lift': lift,
-        }
+        self.dr = dr
+        self.dc = dc
+        self.lift = lift
         self.client = client
 
-    def _exc_instr(self, args):
-        ret = self.instr.copy()
-        ret.update(args)
-        return self.client.send(ret)
-
-    def move_to(self, r, c):
-        if c != None:
-            self._exc_instr({
-                'instr': 'hMove',
-                'column': c,
-                })
-
-        if r != None:
-            self._exc_instr({
-                'instr': 'vMove',
-                'row': r,
-                })
-
-    def pickup(self):
-        self._exc_instr({
-            'instr': 'pickup',
-            })
-
-    def putdown(self):
-        self._exc_instr({
-            'instr': 'putdown',
-            })
+    def __getattr__(self, attr):
+        return partial(self.client.__getattr__(attr),
+                       dr=self.dr, dc=self.dc, lift=self.lift)
 
     def getRunStatus(self, token):
-        return self._exc_instr({
-            'instr': 'null',
-            'token': token,
-            })
+        return self.null(token=token)
