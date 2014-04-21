@@ -1,3 +1,9 @@
+//status code:
+//0 ok
+//1 pre condition not satisfied
+//2 invalid arguments
+//3 no such method
+//4 runtime error
 function Instruction(example, process) {
     this.example = example;
     this.process = process;
@@ -50,7 +56,7 @@ Instruction.prototype = {
             try {
                 ctx = this.ctxGetter(args);
             } catch (err) {
-                console.log(args)
+                console.log(args);
                 console.log(err);
                 return {
                     status: 2,
@@ -64,10 +70,10 @@ Instruction.prototype = {
                     result: this.process.call(ctx, args),
                 };
             } catch (err) {
-                console.log(args)
+                console.log(args);
                 console.log(err);
                 return {
-                    status: 3,  //runtime error
+                    status: 4,  //runtime error
                 };
             }
         } else {
@@ -103,7 +109,9 @@ instr = new Instruction(
         var ret = [];
         for (var item in Instruction.instrs) {
             ret.push(item);
-        } 
+        }
         return ret;
     }
 );
+
+instr = new Instruction({instr: 'null'}, function(args) {});

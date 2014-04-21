@@ -37,3 +37,9 @@ class Lift(object):
         self._exc_instr({
             'instr': 'putdown',
             })
+
+    def getRunStatus(self, token):
+        return self._exc_instr({
+            'instr': 'null',
+            'token': token,
+            })

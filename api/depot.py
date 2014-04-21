@@ -1,5 +1,3 @@
-import client
-import logging
 import lift
 
 class Depot(object):
@@ -38,17 +36,3 @@ class Depot(object):
         l.pickup()
         l.move_to(dst_r, dst_c)
         l.putdown()
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    client = client.Client()
-    d = Depot(0, 0, client)
-    d.set_boxes([[['boxA', 'boxB', 'boxC'], [], [], [], []],
-                   [[], [], [], [], []],
-                   [[], [], [], [], []],
-                   [[], [], [], [], []],
-                   [[], [], [], [], ['boxD']]]);
-    d.move_box('l', 0, 0, 0, 1)
-    d.move_box('l', 0, 0, 1, 1)
-    d.move_box('l', 0, 0, 2, 1)
-    print d.get_boxes(0, 0)

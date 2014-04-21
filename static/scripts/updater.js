@@ -1,6 +1,14 @@
 function Updater(url, handler) {
     this.url = url;
     this.handler = handler;
+    this.fb_flush = function() {
+        if (this.fb_data.length > 0) {
+            console.log(this.fb_data);
+            this.request.abort();
+        }
+        setTimeout(this.fb_flush.bind(this), 1000);
+    };
+    setTimeout(this.fb_flush.bind(this), 1000);
 }
 
 Updater.prototype = {
@@ -19,14 +27,19 @@ Updater.prototype = {
     },
 
     onError: function(jqXHR, textStatus, errorThrown) {
-        this.errorSleepTime *= 2;
-        console.log(textStatus);
-        console.log(errorThrown);
-        window.setTimeout(this.poll.bind(this), this.errorSleepTime);
+        if (textStatus != 'abort') {
+            console.log(textStatus);
+            console.log(errorThrown);
+            this.errorSleepTime *= 2;
+            setTimeout(this.poll.bind(this), this.errorSleepTime);
+        } else {
+            this.poll();
+        }
     },
 
     poll: function() {
-        $.ajax({
+        console.log('poll');
+        this.request = $.ajax({
             url: this.url,
             type: 'POST',
             data: JSON.stringify(this.fb_data),
@@ -35,5 +48,6 @@ Updater.prototype = {
             success: this.onSuccess,
             error: this.onError,
         });
+        this.fb_data = [];
     }
 };

@@ -107,7 +107,20 @@ Lift.prototype = {
             this.idle = false;
             var job = this.jobQueue[0];
             this.jobQueue = this.jobQueue.slice(1);
-            job();
+            try {
+                console.log(job.token);
+                job.run();
+            } catch (err) {
+                console.log(err);
+                instrUpdater.feedback({
+                    status: 4,
+                    token: job.token,
+                });
+            }
+            instrUpdater.feedback({
+                status: 0,
+                token: job.token,
+            });
         }
     },
 
@@ -116,7 +129,7 @@ Lift.prototype = {
             (this === this.depot.rLift && column <= this.depot.lLift.arm.pos)) {
             this.idle = true;
             this.scheduleJobs();
-            return false;
+            throw 'runtime error';
         }
         var v = Lift.params.hVelocity,
             to = this.lift.getXY(this.lift.pos, column),
@@ -142,7 +155,7 @@ Lift.prototype = {
         if (this.carry != -1 || this.depot.getBoxCount(this.lift.pos, this.arm.pos) === 0) {
             this.idle = true;
             this.scheduleJobs();
-            return false;
+            throw 'runtime error';
         }
         var fun = function() {
             this.carry = this.depot.takeBox(this.lift.pos, this.arm.pos);
@@ -162,7 +175,7 @@ Lift.prototype = {
         if (this.carry === -1 || this.depot.getBoxCount(this.lift.pos, this.arm.pos) === port.maxStacks) {
             this.idle = true;
             this.scheduleJobs();
-            return false;
+            throw 'runtime error';
         }
         var fun = function() {
             this.depot.addBox(this.lift.pos, this.arm.pos, this.carry);

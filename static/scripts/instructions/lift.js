@@ -15,10 +15,14 @@ var instr = new Instruction(
         dc: 0,
         lift: 'l',
         column: 4,
-    }, 
+    },
 
     function(args) {
-        this.addJob(this.hMove.bind(this, args.column));
+        var job = {
+            run: this.hMove.bind(this, args.column),
+            token: args.token,
+        };
+        this.addJob(job);
     }
 );
 instr.setContextGetter(getLift);
@@ -36,7 +40,11 @@ instr = new Instruction(
     },
 
     function(args) {
-        this.addJob(this.vMove.bind(this, args.row));
+        var job = {
+            run: this.vMove.bind(this, args.row),
+            token: args.token,
+        };
+        this.addJob(job);
     }
 );
 instr.setContextGetter(getLift);
@@ -53,8 +61,12 @@ instr = new Instruction(
     },
 
     function(args) {
-        this.addJob(this.pickUp.bind(this)); 
-    } 
+        var job = {
+            run: this.pickUp.bind(this, args.row),
+            token: args.token,
+        };
+        this.addJob(job);
+    }
 );
 instr.setContextGetter(getLift);
 
@@ -67,7 +79,11 @@ instr = new Instruction(
     },
 
     function(args) {
-        this.addJob(this.putDown.bind(this));
+        var job = {
+            run: this.putDown.bind(this, args.row),
+            token: args.token,
+        };
+        this.addJob(job);
     }
 );
 instr.setContextGetter(getLift);

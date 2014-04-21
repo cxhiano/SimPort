@@ -22,10 +22,11 @@ class Media(object):
         create a new instruction to be sent to browser and return its token
         '''
         instr = json.loads(instr)
-        token = self.token_generator.next()
-        #add token to instruction for reference
-        #remember to remove it when return the data to user
-        instr['token'] = token
+        if not instr.has_key('token'):
+            token = self.token_generator.next()
+            instr['token'] = token
+        else:
+            token = instr['token']
         self.fb_callback[token] = callback
         self.instr_cache.append(json.dumps(instr))
         self._do_update_callback()
@@ -46,15 +47,14 @@ class Media(object):
                     callback = self.fb_callback.get(token)
                     if callback:
                         del self.fb_callback[token]
-                        del item['token']
                         callback(item)
                     else:
-                        logging.debug('No such token: {0}'.format(item))
+                        logging.debug('No corresponding callback: {0}'.format(item))
         except ValueError:
             logging.error('Error loading response: {0}'.format(data))
 
     def _do_update_callback(self):
-        if len(self.instr_cache) == 0: 
+        if len(self.instr_cache) == 0:
             return
         if self.update_callback:
             try:
