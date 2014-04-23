@@ -81,8 +81,8 @@ function Lift(depot, row, column) {
 }
 
 Lift.params = {
-    hVelocity: 20,
-    vVelocity: 20,
+    hVelocity: 50,
+    vVelocity: 50,
     tPickup: 1000,
     tPutdown: 1000,
 };
@@ -108,29 +108,30 @@ Lift.prototype = {
             var job = this.jobQueue[0];
             this.jobQueue = this.jobQueue.slice(1);
             try {
-                console.log(job.token);
+                var chks = job.runTimeCheckers;
+                for (var err in chks) {
+                    if (chks[err].call(this, job.args)) {
+                        this.idle = true;
+                        this.scheduleJobs();
+                        throw new Error(err);
+                    }
+                }
                 job.run();
-            } catch (err) {
-                console.log(err);
+            } catch (error) {
                 instrUpdater.feedback({
-                    status: 4,
-                    token: job.token,
+                    status: Instruction.status.RUNTIME_ERROR,
+                    token: job.args.token,
+                    error: error.message,
                 });
             }
             instrUpdater.feedback({
-                status: 0,
-                token: job.token,
+                status: Instruction.status.OK,
+                token: job.args.token,
             });
         }
     },
 
     hMove: function(column) {
-        if ((this === this.depot.lLift && column >= this.depot.rLift.arm.pos) ||
-            (this === this.depot.rLift && column <= this.depot.lLift.arm.pos)) {
-            this.idle = true;
-            this.scheduleJobs();
-            throw 'runtime error';
-        }
         var v = Lift.params.hVelocity,
             to = this.lift.getXY(this.lift.pos, column),
             t = this.lift.getMoveTime(to, v);
@@ -152,11 +153,6 @@ Lift.prototype = {
     },
 
     pickUp: function() {
-        if (this.carry != -1 || this.depot.getBoxCount(this.lift.pos, this.arm.pos) === 0) {
-            this.idle = true;
-            this.scheduleJobs();
-            throw 'runtime error';
-        }
         var fun = function() {
             this.carry = this.depot.takeBox(this.lift.pos, this.arm.pos);
             this.idle = true;
@@ -172,11 +168,6 @@ Lift.prototype = {
     },
 
     putDown: function() {
-        if (this.carry === -1 || this.depot.getBoxCount(this.lift.pos, this.arm.pos) === port.maxStacks) {
-            this.idle = true;
-            this.scheduleJobs();
-            throw 'runtime error';
-        }
         var fun = function() {
             this.depot.addBox(this.lift.pos, this.arm.pos, this.carry);
             this.carry = -1;

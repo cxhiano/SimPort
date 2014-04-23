@@ -12,6 +12,3 @@ class Lift(object):
     def __getattr__(self, attr):
         return partial(self.client.__getattr__(attr),
                        dr=self.dr, dc=self.dc, lift=self.lift)
-
-    def getRunStatus(self, token):
-        return self.null(token=token)

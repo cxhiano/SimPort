@@ -3,8 +3,10 @@ function dispatcher(instr) {
         var i = JSON.parse(item);
         if (i.instr != 'null') {
             fb = Instruction.call(i);
-            fb.token = i.token;
-            instrUpdater.feedback(fb);
+            if (fb.status != Instruction.status.RETURN_AT_RUNTIME) {
+                fb.token = i.token;
+                instrUpdater.feedback(fb);
+            }
         }
     });
 }

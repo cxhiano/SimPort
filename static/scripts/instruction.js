@@ -1,14 +1,18 @@
-//status code:
-//0 ok
-//1 pre condition not satisfied
-//2 invalid arguments
-//3 no such method
-//4 runtime error
 function Instruction(example, process) {
     this.example = example;
     this.process = process;
     Instruction.register(this);
 }
+
+Instruction.status = {
+    OK: 0,
+    RETURN_AT_RUNTIME: 1,
+    ERR_PRECOND: 2,
+    INVALID_ARGS: 3,
+    NO_SUCH_INSTRUCTION: 4,
+    RUNTIME_ERROR: 5,
+    GET_CONTEXT_ERROR: 6,
+};
 
 Instruction.instrs = {};
 
@@ -19,10 +23,10 @@ Instruction.register = function(instr) {
 Instruction.call = function(args) {
     var instr = Instruction.instrs[args.instr];
     if (instr) {
-        return instr.call(args);
+        return instr._call(args);
     }
     return {
-        status: 3,  //no such method
+        status: Instruction.status.NO_SUCH_INSTRUCTION,
     };
 };
 
@@ -44,10 +48,10 @@ Instruction.prototype = {
         return false;
     },
 
-    call: function(args) {
+    _call: function(args) {
         if (this.invalidArgs(args)) {
             return {
-                status: 2,  //invalid arguments
+                status: Instruction.status.INVALID_ARGS,
             };
         }
 
@@ -56,29 +60,24 @@ Instruction.prototype = {
             try {
                 ctx = this.ctxGetter(args);
             } catch (err) {
-                console.log(args);
-                console.log(err);
                 return {
-                    status: 2,
+                    status: Instruction.status.GET_CONTEXT_ERROR,
+                    error: err.message,
                 };
             }
         }
         if (this.preCond === undefined || this.preCond.call(ctx, args)) {
             try {
-                return {
-                    status: 0,  //ok
-                    result: this.process.call(ctx, args),
-                };
+                return this.process.call(ctx, args);
             } catch (err) {
-                console.log(args);
-                console.log(err);
                 return {
-                    status: 4,  //runtime error
+                    status: Instruction.status.RUNTIME_ERROR,
+                    error: err.message,
                 };
             }
         } else {
             return {
-                status: 1,  //pre condition not satisfied
+                status: Instruction.status.ERR_PRECOND,
             };
         }
     }
@@ -93,9 +92,15 @@ var instr = new Instruction(
     function(args) {
         var instr = Instruction.instrs[args.name];
         if (instr) {
-            return instr.example;
+            return {
+                'status': Instruction.status.OK,
+                'example': instr.example,
+            };
         } else {
-            return 'No such instruction';
+            return {
+                'status': Instruction.status.OK,
+                'example': 'No Such Instruction',
+            };
         }
     }
 );
@@ -110,8 +115,27 @@ instr = new Instruction(
         for (var item in Instruction.instrs) {
             ret.push(item);
         }
-        return ret;
+        return {
+            status: Instruction.status.OK,
+            instructions: ret,
+        };
     }
 );
 
-instr = new Instruction({instr: 'null'}, function(args) {});
+instr = new Instruction(
+    {
+        instr: 'listStatus',
+    }, function(args) {
+        return {
+            status: Instruction.status.OK,
+            instr_status: Instruction.status,
+        };
+    }
+);
+
+instr = new Instruction({
+    instr: 'null',
+    }, function(args) {
+       return { status: Instruction.status.OK };
+    }
+);

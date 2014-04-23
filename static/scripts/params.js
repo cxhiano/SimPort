@@ -25,7 +25,7 @@ Params = {
     _getAttr: function(obj, attr) {
         var ret = obj[attr];
         if (ret === undefined) {
-            throw 'No such param';
+            throw new Error('No such param');
         }
         return ret;
     },

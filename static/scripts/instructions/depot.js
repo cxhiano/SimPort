@@ -16,6 +16,7 @@ instr = new Instruction(
 
     function(args) {
         this.addBox(args.row, args.column, args.box);
+        return { status: Instruction.status.OK };
     }
 );
 instr.setContextGetter(getDepot);
@@ -33,7 +34,10 @@ instr = new Instruction(
     },
 
     function(args) {
-        return this.takeBox(args.row, args.column);
+        return {
+            status: Instrution.status.OK,
+            box: this.takeBox(args.row, args.column),
+        };
     }
 );
 instr.setContextGetter(getDepot);
@@ -51,7 +55,10 @@ instr = new Instruction(
     },
 
     function(args) {
-        return this.data[args.row][args.column];
+        return {
+            status: Instruction.status.OK,
+            boxes: this.data[args.row][args.column],
+        };
     }
 );
 instr.setContextGetter(getDepot);
@@ -74,6 +81,7 @@ instr = new Instruction(
         port.depot.data = this.data;
         port.depot.cascadeDraw(pos.x, pos.y);
         port.depot.render();
+        return { status: Instruction.status.OK };
     }
 );
 instr.setContextGetter(getDepot);
