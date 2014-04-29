@@ -24,7 +24,7 @@ Depot.init = function() {
 };
 
 Depot.prototype = {
-    updateBox: function(row, column) {
+    updateBoxView: function(row, column) {
         var pos = port.getXY({
             rowDepot: this.row,
             columnDepot: this.column,
@@ -42,12 +42,12 @@ Depot.prototype = {
 
     takeBox: function(row, column) {
         var ret = this.data[row][column].pop();
-        this.updateBox(row, column);
+        this.updateBoxView(row, column);
         return ret;
     },
 
     addBox: function(row, column, box) {
         this.data[row][column].push(box);
-        this.updateBox(row, column);
+        this.updateBoxView(row, column);
     },
 };

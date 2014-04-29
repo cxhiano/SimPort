@@ -85,3 +85,46 @@ instr = new Instruction(
     }
 );
 instr.setContextGetter(getDepot);
+/*
+getColbySide = function(side) {
+    return (side === 'l')?0:port.depot.columns;
+};
+
+instr = new Instruction({
+    instr: 'import',
+    side: 'l',
+    box: 'boxA',
+    },
+
+    function(args) {
+        var row = args.row,
+            column = getColbySide(args.side);
+        this.addBox(row, column, args.box);
+        return { status: Instruction.status.OK };
+    }
+);
+instr.setContextGetter(getDepot);
+instr.setPreCondition(function(args) {
+    var row = args.row,
+        column = getColbySide(args.side);
+    if (this.getBoxCount(row, column) > 0) return false;
+    var q = Quest.activatedBoxDict[args.box];
+    if (q === undefined || q.operation === 'export') return false;
+    return true;
+});
+
+instr = new Instruction({
+    instr: 'export',
+    side: 'r',
+    row: 1,
+    },
+
+    function(args) {
+
+    }
+);
+instr.setContextGetter(getDepot);
+instr.setPreCondition(function(args) {
+
+});
+*/
