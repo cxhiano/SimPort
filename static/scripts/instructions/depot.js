@@ -50,14 +50,12 @@ instr = new Instruction(
         instr: 'getBoxes',
         dr: 0,
         dc: 0,
-        row: 0,
-        column: 0,
     },
 
     function(args) {
         return {
             status: Instruction.status.OK,
-            boxes: this.data[args.row][args.column],
+            boxes: this.data,
         };
     }
 );
@@ -65,7 +63,7 @@ instr.setContextGetter(getDepot);
 
 instr = new Instruction(
     {
-        instr: 'setDepotBoxes',
+        instr: 'setBoxes',
         dr: 0,
         dc: 0,
         data: [[['boxA', 'boxB', 'boxC'], [], [], [], []],

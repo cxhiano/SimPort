@@ -17,7 +17,10 @@ instr = new Instruction(
     },
 
     function(args) {
-        return Params.get(args.param);
+        return {
+            status: Instruction.status.OK,
+            value: Params.get(args.param),
+        };
     }
 );
 

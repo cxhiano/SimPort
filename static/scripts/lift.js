@@ -83,8 +83,8 @@ function Lift(depot, row, column) {
 Lift.params = {
     hVelocity: 50,
     vVelocity: 50,
-    tPickup: 1000,
-    tPutdown: 1000,
+    tPickup: 500,
+    tPutdown: 500,
 };
 
 Lift.prototype = {
