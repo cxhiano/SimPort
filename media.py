@@ -30,6 +30,12 @@ class Media(object):
         self.fb_callback[token] = callback
         self.instr_cache.append(json.dumps(instr))
         self._do_update_callback()
+        return token
+
+    def deregister_feedback(self, token):
+        if self.fb_callback.has_key(token):
+            logging.debug('Feedback deregistered: {0}'.format(token))
+            del self.fb_callback[token]
 
     def register_updater(self, callback):
         '''

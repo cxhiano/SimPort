@@ -39,14 +39,17 @@ class NewInstructionHandler(RequestHandler):
     '''
     @tornado.web.asynchronous
     def post(self):
-        md.new(self.request.body, self._feedback)
+        self.token = md.new(self.request.body, self._feedback)
 
     @tornado.web.asynchronous
     def get(self):
         data = self.request.arguments
         for item in data:
             data[item] = data[item][0]
-        md.new(json.dumps(data), self._feedback)
+        self.token = md.new(json.dumps(data), self._feedback)
+
+    def on_connection_close(self):
+        md.deregister_feedback(self.token)
 
     def _feedback(self, data):
         if self.request.connection.stream.closed():
@@ -69,6 +72,6 @@ def main():
     app.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     main()
