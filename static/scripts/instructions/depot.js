@@ -66,7 +66,7 @@ instr = new Instruction(
         instr: 'setBoxes',
         dr: 0,
         dc: 0,
-        data: [[['boxA', 'boxB', 'boxC'], [], [], [], []],
+        boxes: [[['boxA', 'boxB', 'boxC'], [], [], [], []],
                [[], [], [], [], []],
                [[], [], [], [], []],
                [[], [], [], [], []],
@@ -75,7 +75,7 @@ instr = new Instruction(
 
     function(args) {
         pos = port.field.getXY(args.dr, args.dc);
-        this.data = args.data;
+        this.data = args.boxes;
         port.depot.data = this.data;
         port.depot.cascadeDraw(pos.x, pos.y);
         port.depot.render();

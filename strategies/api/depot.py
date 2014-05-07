@@ -12,33 +12,23 @@ class Depot(object):
             'r': lift.Lift(dr, dc, 'r', client),
             }
         self.data = []
+        self.get_params()
 
     def __getattr__(self, attr):
         return partial(self.client.__getattr__(attr),
                        dr=self.dr, dc=self.dc)
 
-    def get_size(self):
-        rows = self.client.getParam('port.depot.rows')
-        columns = self.client.getParam('port.depot.columns')
-        return rows, columns
-
-    def move_box(self, lift, src_r, src_c, dst_r, dst_c):
-        l = self.lifts[lift]
-        l.hMove(column=src_c)
-        l.vMove(row=src_r)
-        l.pickup()
-        l.vMove(row=dst_r)
-        l.hMove(column=dst_c)
-        l.putdown()
+    def get_params(self):
+        self.rows = self.client.getParam('port.depot.rows')
+        self.columns = self.client.getParam('port.depot.columns')
 
     def random(self, start_cnt=0):
-        rows, columns = self.get_size()
         max_stack = self.client.getParam('port.maxStacks')
         cnt = start_cnt
         self.data = []
-        for i in range(rows):
+        for i in range(self.rows):
             row = []
-            for j in range(columns):
+            for j in range(self.columns):
                 boxes = []
                 for k in range(random.randrange(max_stack)):
                     boxes.append(cnt)
@@ -46,3 +36,4 @@ class Depot(object):
                 row.append(boxes)
             self.data.append(row)
         self.setBoxes(data=self.data)
+        return cnt

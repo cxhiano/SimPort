@@ -72,7 +72,7 @@ function Lift(depot, row, column) {
     this.lift.pos = row;
     this.lift.getXY = function() {
         var row = arguments[0],
-        column = (arguments[1] === undefined)?this.master.arm.pos:arguments[1],
+            column = (arguments[1] === undefined)?this.master.arm.pos:arguments[1],
             xy = this.master.getXY(row, column);
         xy.x -= port.depot.hSpace / 2;
         return xy;
@@ -81,10 +81,12 @@ function Lift(depot, row, column) {
 }
 
 Lift.params = {
-    hVelocity: 50,
-    vVelocity: 50,
-    tPickup: 500,
-    tPutdown: 500,
+    hVelocity: 200,
+    vVelocity: 200,
+    tPickup: 100,
+    tPutdown: 100,
+//    tV: (port.box.height + port.deopt.vSpace) / Lift.params.vVelocity,
+//    tH: (port.box.width + port.deopt.hSpace) / Lift.params.hVelocity,
 };
 
 Lift.prototype = {

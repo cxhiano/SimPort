@@ -1,10 +1,9 @@
 function Depot(row, column) {
     this.row = row;
     this.column = column;
-    this.velocity = 20;                 //px per sec
     this.data = port.field.data[row][column];
-    this.lLift = new Lift(this, 0, 1);
-    this.rLift = new Lift(this, 1, 2);
+    this.lLift = new Lift(this, 0, 0);
+    this.rLift = new Lift(this, 0, port.depot.columns - 1);
 }
 
 Depot.getInstance = function(row, column) {
