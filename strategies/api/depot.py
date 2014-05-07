@@ -1,4 +1,4 @@
-import lift
+import crane
 import random
 from functools import partial
 
@@ -7,9 +7,9 @@ class Depot(object):
         self.dr = dr
         self.dc = dc
         self.client = client
-        self.lifts = {
-            'l': lift.Lift(dr, dc, 'l', client),
-            'r': lift.Lift(dr, dc, 'r', client),
+        self.cranes = {
+            'l': crane.Crane(dr, dc, 'l', client),
+            'r': crane.Crane(dr, dc, 'r', client),
             }
         self.data = []
         self.get_params()
@@ -23,7 +23,7 @@ class Depot(object):
         self.columns = self.client.getParam('port.depot.columns')
 
     def random(self, start_cnt=0):
-        max_stack = self.client.getParam('port.maxStacks')
+        max_stack = self.client.getParam('port.maxTiers')
         cnt = start_cnt
         self.data = []
         for i in range(self.rows):

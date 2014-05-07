@@ -1,5 +1,5 @@
-def planMove(lift, routes):
-    pos = lift.getPosition(ret=True)
+def planMove(crane, routes):
+    pos = crane.getPosition(ret=True)
     row, column = pos['row'], pos['column']
     while len(routes) > 0:
         shortest = 1000000000
@@ -9,6 +9,6 @@ def planMove(lift, routes):
             if dist < shortest:
                 shortest = dist
                 best_r = r
-        lift.move_box(best_r[0][0], best_r[0][1], best_r[1][0], best_r[1][1])
+        crane.move_box(best_r[0][0], best_r[0][1], best_r[1][0], best_r[1][1])
         row, column = best_r[1]
         routes.remove(best_r)

@@ -1,7 +1,7 @@
 var instr = new Instruction(
     {
         instr: 'config',
-        param: 'port.maxStacks',
+        param: 'port.maxTiers',
         value: '6',
     },
 

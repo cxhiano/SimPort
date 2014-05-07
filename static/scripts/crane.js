@@ -1,6 +1,6 @@
 function DivComponent(master, width, height) {
     this.master = master;
-    this.element = $('<div class="lift" />');
+    this.element = $('<div class="crane" />');
     this.width = width;
     this.height = height;
 }
@@ -53,7 +53,7 @@ DivComponent.prototype = {
     },
 };
 
-function Lift(depot, row, column) {
+function Crane(depot, row, column) {
     this.depot = depot;
     this.idle = true;
     this.carry = -1;
@@ -68,28 +68,28 @@ function Lift(depot, row, column) {
     };
     this.arm.display({});
 
-    this.lift = new DivComponent(this, port.box.width + port.depot.hSpace, port.box.height);
-    this.lift.pos = row;
-    this.lift.getXY = function() {
+    this.crane = new DivComponent(this, port.box.width + port.depot.hSpace, port.box.height);
+    this.crane.pos = row;
+    this.crane.getXY = function() {
         var row = arguments[0],
             column = (arguments[1] === undefined)?this.master.arm.pos:arguments[1],
             xy = this.master.getXY(row, column);
         xy.x -= port.depot.hSpace / 2;
         return xy;
     };
-    this.lift.display({});
+    this.crane.display({});
 }
 
-Lift.params = {
+Crane.params = {
     hVelocity: 200,
     vVelocity: 200,
     tPickup: 100,
     tPutdown: 100,
-//    tV: (port.box.height + port.deopt.vSpace) / Lift.params.vVelocity,
-//    tH: (port.box.width + port.deopt.hSpace) / Lift.params.hVelocity,
+//    tV: (port.box.height + port.deopt.vSpace) / Crane.params.vVelocity,
+//    tH: (port.box.width + port.deopt.hSpace) / Crane.params.hVelocity,
 };
 
-Lift.prototype = {
+Crane.prototype = {
     getXY: function(row, column) {
         return port.getXY({
             rowDepot: this.depot.row,
@@ -134,11 +134,11 @@ Lift.prototype = {
     },
 
     hMove: function(column) {
-        var v = Lift.params.hVelocity,
-            to = this.lift.getXY(this.lift.pos, column),
-            t = this.lift.getMoveTime(to, v);
+        var v = Crane.params.hVelocity,
+            to = this.crane.getXY(this.crane.pos, column),
+            t = this.crane.getMoveTime(to, v);
 
-        this.lift.element.animate(
+        this.crane.element.animate(
             {
                 left: to.x,
                 top: to.y,
@@ -151,38 +151,38 @@ Lift.prototype = {
     },
 
     vMove: function(row) {
-        this.lift.move(row, Lift.params.vVelocity);
+        this.crane.move(row, Crane.params.vVelocity);
     },
 
     pickUp: function() {
         var fun = function() {
-            this.carry = this.depot.takeBox(this.lift.pos, this.arm.pos);
+            this.carry = this.depot.takeBox(this.crane.pos, this.arm.pos);
             this.idle = true;
             this.scheduleJobs();
         };
 
-        this.lift.element.animate({
+        this.crane.element.animate({
                 opacity: 1,
             }, {
-                duration: Lift.params.tPickup,
+                duration: Crane.params.tPickup,
                 complete: fun.bind(this),
             });
     },
 
     putDown: function() {
         var fun = function() {
-            this.depot.addBox(this.lift.pos, this.arm.pos, this.carry);
+            this.depot.addBox(this.crane.pos, this.arm.pos, this.carry);
             this.carry = -1;
 
             this.idle = true;
             this.scheduleJobs();
         };
 
-        this.lift.element.animate(
+        this.crane.element.animate(
             {
                 opacity: 0.3,
             }, {
-                duration: Lift.params.tPutdown,
+                duration: Crane.params.tPutdown,
                 complete: fun.bind(this),
             });
     },

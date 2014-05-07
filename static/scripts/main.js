@@ -19,7 +19,7 @@ function registerEvents() {
         });
 
         port.config(args);
-        var data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], args.maxStacks);
+        var data = generateData([args.rows, args.columns, args.depotRows, args.depotColumns], args.maxTiers);
         port.display(data);
         Depot.init();
     });

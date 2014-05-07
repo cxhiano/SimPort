@@ -113,7 +113,7 @@ Port.prototype = {
         this.depot.columns = args.depotColumns;
         this.field.rows = args.rows;
         this.field.columns = args.columns;
-        this.maxStacks = args.maxStacks;
+        this.maxTiers = args.maxTiers;
         this.field.updateLayout();
     },
 

@@ -2,8 +2,8 @@ function Depot(row, column) {
     this.row = row;
     this.column = column;
     this.data = port.field.data[row][column];
-    this.lLift = new Lift(this, 0, 0);
-    this.rLift = new Lift(this, 0, port.depot.columns - 1);
+    this.lCrane = new Crane(this, 0, 0);
+    this.rCrane = new Crane(this, 0, port.depot.columns - 1);
 }
 
 Depot.getInstance = function(row, column) {
@@ -11,7 +11,7 @@ Depot.getInstance = function(row, column) {
 };
 
 Depot.init = function() {
-    $('.lift').remove();
+    $('.crane').remove();
     Depot.prototype.depots = [];
     var d = Depot.prototype.depots;
     for (var i = 0; i < port.field.rows; ++i) {

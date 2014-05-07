@@ -30,5 +30,5 @@ if __name__ == '__main__':
     d[0][0].setBoxes(boxes=data)
     d[1][0].setBoxes(boxes=data)
 
-    dp.planMove(d[0][0].lifts['l'], routes)
-    greedy.planMove(d[1][0].lifts['l'], routes)
+    dp.planMove(d[0][0].cranes['l'], routes)
+    greedy.planMove(d[1][0].cranes['l'], routes)

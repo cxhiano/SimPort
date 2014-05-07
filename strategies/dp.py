@@ -3,8 +3,8 @@ import lib
 def dist(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-def planMove(lift, routes):
-    pos = lift.getPosition(ret=True)
+def planMove(crane, routes):
+    pos = crane.getPosition(ret=True)
     pos = (pos['row'], pos['column'])
 
     n = len(routes)
@@ -39,4 +39,4 @@ def planMove(lift, routes):
         seq.append(i)
         i, s = trace[i][s]
     for r in reversed(seq):
-        lift.move_box(routes[r][0][0], routes[r][0][1], routes[r][1][0], routes[r][1][1])
+        crane.move_box(routes[r][0][0], routes[r][0][1], routes[r][1][0], routes[r][1][1])
