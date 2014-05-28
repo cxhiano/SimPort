@@ -2,5 +2,5 @@ log
 *.swp
 *.pyc
 SimPort.sublime-workspace
-api/test.py
-strategies/test.py
+test.py
+strategies/data/

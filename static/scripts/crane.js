@@ -81,7 +81,7 @@ function Crane(depot, row, column) {
 }
 
 Crane.params = {
-    hVelocity: 200,
+    hVelocity: 100,
     vVelocity: 200,
     tPickup: 100,
     tPutdown: 100,

@@ -84,7 +84,7 @@ Port.prototype = {
     init_units: function() {
         this.box = new CascadeView(this.ctx, null);
         this.box.draw = function(x0, y0) {
-            var tmp = 255 - this.data.length / 6 * 255;
+            var tmp = 255 - this.data.length / port.maxTiers * 255;
                 color = {
                     R: 255,
                     G: tmp,

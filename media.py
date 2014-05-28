@@ -21,6 +21,7 @@ class Media(object):
         '''
         create a new instruction to be sent to browser and return its token
         '''
+        logging.debug('new instruction:' + instr)
         instr = json.loads(instr)
         if not instr.has_key('token'):
             token = self.token_generator.next()

@@ -28,3 +28,6 @@ class Crane(object):
         self.hMove(column=dst_c)
         self.putdown()
 
+    def execute_plan(self, plan):
+        for r in plan:
+            self.move_box(r[0][0], r[0][1], r[1][0], r[1][1])

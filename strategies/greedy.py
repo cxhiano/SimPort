@@ -1,14 +1,24 @@
-def planMove(crane, routes):
-    pos = crane.getPosition(ret=True)
-    row, column = pos['row'], pos['column']
-    while len(routes) > 0:
-        shortest = 1000000000
+import lib
+
+def interval(r, pos):
+    return lib.dist(r[0], pos)
+
+def complete_time(r, pos):
+    return lib.dist(r[0], pos) + lib.dist(r[0], r[1])
+
+def plan_move(start, routes, cost_fun=interval):
+    row, column = start
+    copy = routes[:]
+    ret = []
+    while len(copy) > 0:
+        best = 1000000000
         best_r = None
-        for r in routes:
-            dist = abs(r[0][0] - row) + abs(r[0][1] - column)
-            if dist < shortest:
-                shortest = dist
+        for r in copy:
+            cost = cost_fun(r, (row, column))
+            if cost < best:
+                best = cost
                 best_r = r
-        crane.move_box(best_r[0][0], best_r[0][1], best_r[1][0], best_r[1][1])
         row, column = best_r[1]
-        routes.remove(best_r)
+        copy.remove(best_r)
+        ret.append(best_r)
+    return ret

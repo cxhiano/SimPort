@@ -6,9 +6,9 @@ function Updater(url, handler) {
         if (d - this.lastPoll > this.maxIdleTime && this.fbData.length > 0) {
             this.request.abort();
         }
-        setTimeout(this.fbFlush.bind(this), 1000);
+        setTimeout(this.fbFlush.bind(this), 200);
     };
-    setTimeout(this.fbFlush.bind(this), 1000);
+    setTimeout(this.fbFlush.bind(this), 200);
 }
 
 Updater.prototype = {
@@ -18,7 +18,7 @@ Updater.prototype = {
 
     lastPoll: 0,
 
-    maxIdleTime: 800,
+    maxIdleTime: 200,
 
     feedback: function(data) {
         this.fbData.push(data);
