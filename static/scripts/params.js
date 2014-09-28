@@ -6,7 +6,10 @@ var instr = new Instruction(
     },
 
     function(ars) {
-
+        Params.set(args.param, value);
+        return {
+            status: Instruction.status.OK,
+        };
     }
 );
 

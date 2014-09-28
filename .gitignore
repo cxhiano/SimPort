@@ -3,4 +3,4 @@ log
 *.pyc
 SimPort.sublime-workspace
 test.py
-strategies/data/
+strategies
